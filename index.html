@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>WAFLA MARKET</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui;background:#000;color:#fff;padding-bottom:90px}
+header{position:sticky;top:0;z-index:30;background:#000;border-bottom:1px solid #222;padding:14px 12px}
+.top{display:flex;gap:10px;align-items:center;max-width:1100px;margin:auto}
+.logo{font-weight:900;font-size:19px;white-space:nowrap}
+.logo span{background:#fff;color:#000;padding:0 7px;border-radius:6px;margin-left:3px}
+.search{flex:1;display:flex;gap:8px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:100px;padding:12px 14px;align-items:center;min-width:0}
+.search input{flex:1;background:transparent;border:none;color:#fff;outline:none;font-size:14px;min-width:0}
+.adminBtn{background:#fff;color:#000;border:none;padding:11px 14px;border-radius:100px;font-weight:900;font-size:12px;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.cats{display:flex;gap:12px;overflow-x:auto;padding:16px 12px 6px;max-width:1100px;margin:auto;scrollbar-width:none}
+.cats::-webkit-scrollbar{display:none}
+.cat{flex-shrink:0;background:#111;border:1px solid #2a2a2a;padding:11px 20px;border-radius:100px;font-size:13px;font-weight:700;cursor:pointer;color:#ccc}
+.cat.active{background:#fff;color:#000}
+.loc-bar{display:flex;gap:10px;padding:6px 12px 0;max-width:1100px;margin:auto;align-items:center}
+.loc-bar select{flex:1;background:#111;border:1px solid #2a2a2a;border-radius:100px;padding:12px 14px;color:#fff;outline:none;font-size:13px}
+.loc-bar button{background:#222;color:#fff;border:1px solid #333;padding:12px 16px;border-radius:100px;font-weight:700;font-size:12px;cursor:pointer;white-space:nowrap}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:16px 12px;max-width:1100px;margin:auto}
+@media(min-width:700px){.grid{grid-template-columns:1fr 1fr 1fr 1fr;gap:20px}}
+.card{background:#111;border:1px solid #222;border-radius:20px;overflow:hidden;position:relative}
+.card img{width:100%;height:220px;object-fit:cover;background:#1a1a1a;display:block}
+.loc-badge{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.8);color:#fff;padding:5px 9px;border-radius:100px;font-size:10px;font-weight:700;border:1px solid #333}
+.info{padding:14px}
+.title{font-size:13px;font-weight:600;line-height:1.4;height:38px;overflow:hidden;color:#eee}
+.price{font-weight:900;font-size:18px;margin:8px 0}
+.meta{font-size:11px;color:#888;display:flex;justify-content:space-between}
+.loc-box{background:#1a2a1a;border:1px solid #2a5a2a;border-radius:12px;padding:9px 10px;margin-top:9px;text-align:left}
+.loc-box b{font-size:11px;color:#4ade80}
+.loc-box div{font-size:13px;font-weight:700;margin-top:2px}
+.loc-box small{font-size:11px;color:#888}
+.btn{margin-top:10px;background:#fff;color:#000;width:100%;padding:13px;border-radius:100px;border:none;font-weight:900;font-size:12px;cursor:pointer}
+.btn-map{display:block;text-align:center;background:#222;color:#fff;border:1px solid #333;padding:10px;border-radius:100px;font-size:11px;font-weight:700;margin-top:8px;text-decoration:none}
+.btn-del{background:#3a1111;color:#ff5555;border:1px solid #552222;width:100%;padding:11px;border-radius:100px;font-weight:900;font-size:11px;cursor:pointer;margin-top:8px}
+.fab{position:fixed;bottom:20px;right:20px;background:#fff;color:#000;width:60px;height:60px;border-radius:50%;border:none;cursor:pointer;z-index:20;display:none;align-items:center;justify-content:center;font-size:32px;font-weight:900;box-shadow:0 10px 30px rgba(255,255,255,.3)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(4px);display:none;z-index:100;align-items:center;justify-content:center;padding:16px}
+.modal.show{display:flex}
+.box-pin{background:#161616;border:1px solid #2a2a2a;border-radius:28px;width:100%;max-width:340px;padding:28px 22px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.box-pin .icon{width:64px;height:64px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:28px}
+.box-pin h3{font-size:20px;margin-bottom:6px}
+.box-pin p{color:#888;font-size:13px;margin-bottom:18px}
+.box-pin input{width:100%;background:#000;border:1px solid #333;border-radius:16px;padding:14px;margin-bottom:12px;outline:none;font-size:15px;color:#fff;text-align:left}
+.box-add{background:#141414;border:1px solid #2a2a2a;border-radius:28px;width:100%;max-width:440px;padding:22px;max-height:88vh;overflow-y:auto}
+.box-add input,.box-add select{width:100%;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:14px;padding:15px;margin-bottom:12px;outline:none;font-size:15px;color:#fff}
+.upload{border:2px dashed #333;border-radius:18px;padding:20px;text-align:center;margin-bottom:14px;cursor:pointer;color:#aaa;font-size:14px;display:block;background:#0a0a0a}
+.upload img{width:100%;height:180px;object-fit:cover;border-radius:14px;display:none;margin-bottom:10px}
+.btn-row{display:flex;gap:12px;margin-top:4px}
+.btn-row button{flex:1;padding:15px;border-radius:100px;font-weight:900;font-size:14px;cursor:pointer;border:none}
+.btn-ghost{background:transparent;border:1px solid #333!important;color:#fff}
+.btn-white{background:#fff;color:#000}
+.link{color:#4ade80;font-size:12px;cursor:pointer;margin-top:10px;display:block;text-align:center}
+</style>
+</head>
+<body>
+<header><div class="top"><div class="logo">WAFLA<span>MARKET</span></div><div class="search"><input id="search" placeholder="Tafuta..." oninput="render()"></div><button class="adminBtn" id="adminBtn" onclick="openPinModal()">ADMIN</button></div></header>
+<div class="cats" id="cats"></div>
+<div class="loc-bar"><select id="locFilter" onchange="setLocationFilter(this.value)"><option value="Zote">Mwanza Yote</option><option value="Nyegezi">Nyegezi</option><option value="Rock City">Rock City</option><option value="Igoma">Igoma</option><option value="Nyakato">Nyakato</option><option value="Mkolani">Mkolani</option><option value="Buhongwa">Buhongwa</option><option value="Nyamagana">Nyamagana</option><option value="Ilemela">Ilemela</option><option value="Kiseke">Kiseke</option><option value="Pasiansi">Pasiansi</option><option value="Mabatini">Mabatini</option><option value="Bugarika">Bugarika</option><option value="Mlimani">Mlimani</option><option value="Nyanza">Nyanza</option><option value="Kisesa">Kisesa</option><option value="Misungwi">Misungwi</option><option value="Kwimba">Kwimba</option><option value="Magu">Magu</option><option value="Sengerema">Sengerema</option><option value="Ukerewe">Ukerewe</option><option value="Nyashishi">Nyashishi</option><option value="Buswelu">Buswelu</option><option value="Kirumba">Kirumba</option><option value="Capri Point">Capri Point</option><option value="Isamilo">Isamilo</option></select><button onclick="useMyLocation()">Karibu Nami</button></div>
+<p id="locInfo" style="text-align:center;color:#888;font-size:12px;margin:8px 0 0">Inaonyesha bidhaa za Mwanza Yote</p>
+<div class="grid" id="grid"></div>
+<button class="fab" id="fabBtn" onclick="openModal()">+</button>
+<div id="pinModal" class="modal" onclick="closePinModal()"><div class="box-pin" onclick="event.stopPropagation()"><div class="icon">🔒</div><h3>Admin - Ulinzi 100%</h3><p>Ingia na Email + Password ya Supabase. Mteja hawezi kuingia hapa.</p><input id="adminEmail" type="email" placeholder="Email - mf: mama@gmail.com"><input id="adminPass" type="password" placeholder="Password"><div class="btn-row"><button class="btn-ghost" onclick="closePinModal()">Ghairi</button><button class="btn-white" onclick="checkPin()">INGIA</button></div><span class="link" onclick="forgotPassword()">Nimesahau Password? Nitumie Link</span><button id="showChangeBtn" onclick="showChangePass()" style="display:none;background:transparent;border:1px solid #333;color:#fff;font-size:12px;padding:10px 16px;border-radius:100px;margin-top:14px;cursor:pointer;width:100%">Badili Password</button><div id="changePassBox" style="display:none;margin-top:14px;border-top:1px solid #333;padding-top:14px;text-align:left"><p style="color:#fff;font-size:13px;font-weight:700;margin-bottom:10px;text-align:center">Badili Password Yako</p><input id="newPass" type="password" placeholder="Password mpya"><input id="newPass2" type="password" placeholder="Rudia password mpya"><button onclick="changePassword()" style="background:#fff;color:#000;border:none;padding:13px;border-radius:100px;font-weight:900;width:100%;cursor:pointer">BADILI PASSWORD</button></div><button onclick="logoutAdmin()" style="background:transparent;border:none;color:#ff5555;font-size:12px;margin-top:14px;cursor:pointer">Toka kwenye Admin</button></div></div>
+<div id="modal" class="modal" onclick="closeModal()"><div class="box-add" onclick="event.stopPropagation()"><h3 style="font-size:20px">Ongeza Bidhaa Mpya</h3><p style="color:#888;font-size:13px;margin:8px 0 16px">Chagua picha, jaza bei, ipo LIVE mara moja.</p><label class="upload" for="f_file"><img id="preview"><span id="uploadText">Chagua Picha<br><small style="color:#666">Bonyeza hapa kufungua Gallery</small></span></label><input type="file" id="f_file" accept="image/*" hidden onchange="previewFile(this)"><input id="f_name" placeholder="Jina la bidhaa"><input id="f_price" type="number" placeholder="Bei - mf: 25000"><select id="f_cat"><option value="">Chagua Kundi</option><option>Nguo</option><option>Simu</option><option>Nyumbani</option><option>Chakula</option><option>Urembo</option></select><label style="font-size:13px;color:#4ade80;font-weight:900;display:block;margin-bottom:6px">BIDHAA INAPATIKANA WAPI? (Mwanza)</label><select id="f_location"><option value="Nyegezi">Nyegezi</option><option value="Rock City">Rock City</option><option value="Igoma">Igoma</option><option value="Nyakato">Nyakato</option><option value="Mkolani">Mkolani</option><option value="Buhongwa">Buhongwa</option><option value="Nyamagana">Nyamagana</option><option value="Ilemela">Ilemela</option><option value="Kiseke">Kiseke</option><option value="Pasiansi">Pasiansi</option><option value="Mabatini">Mabatini</option><option value="Bugarika">Bugarika</option><option value="Mlimani">Mlimani</option><option value="Nyanza">Nyanza</option><option value="Kisesa">Kisesa</option><option value="Misungwi">Misungwi</option><option value="Kwimba">Kwimba</option><option value="Magu">Magu</option><option value="Sengerema">Sengerema</option><option value="Ukerewe">Ukerewe</option><option value="Nyashishi">Nyashishi</option><option value="Buswelu">Buswelu</option><option value="Kirumba">Kirumba</option><option value="Capri Point">Capri Point</option><option value="Isamilo">Isamilo</option></select><input id="f_area" placeholder="Inapatikana wapi hasa? Mf: Nyegezi, karibu na Stand"><input id="f_vendor" placeholder="Jina lako - Mf: Mama Ntilie"><input id="f_phone" placeholder="WhatsApp 0711..."><div class="btn-row"><button class="btn-ghost" onclick="closeModal()">Ghairi</button><button id="addBtn" class="btn-white" onclick="addProduct()">ONGEZA LIVE</button></div></div></div>
+<script>
+const SUPABASE_URL = "https://exwdildhebdrweqpdjkb.supabase.co/rest/v1/";
+const SUPABASE_KEY = "sb_publishable_rsV-RqT04ZH-HzbJNpqMfw_5uKsyKUB";
+let supabaseClient = null;
+try{ supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); }catch(e){}
+const CATS = ["Zote","Nguo","Simu","Nyumbani","Chakula","Urembo"];
+let activeCat="Zote", activeLocation="Zote", products=[], selectedFile=null;
+let isAdmin = false;
+function renderCats(){ document.getElementById('cats').innerHTML = CATS.map(c=>`<div class="cat ${c===activeCat?'active':''}" onclick="setCat('${c}')">${c}</div>`).join(''); }
+function setCat(c){ activeCat=c; renderCats(); render(); }
+function setLocationFilter(loc){ activeLocation=loc; document.getElementById('locInfo').innerText = loc==="Zote" ? 'Inaonyesha bidhaa za Mwanza Yote' : 'Inaonyesha bidhaa zinazopatikana '+loc+' - Mwanza tu'; render(); }
+function useMyLocation(){
+  if(!navigator.geolocation) return alert('Simu haiungi GPS');
+  document.getElementById('locInfo').innerText='Inatafuta ulipo Mwanza...';
+  navigator.geolocation.getCurrentPosition((pos)=>{
+    let lat=pos.coords.latitude, lng=pos.coords.longitude;
+    let areas=[{name:"Nyegezi", la:-2.498, lo:32.926},{name:"Rock City", la:-2.518, lo:32.901},{name:"Igoma", la:-2.530, lo:32.890},{name:"Nyakato", la:-2.520, lo:32.950},{name:"Mkolani", la:-2.510, lo:32.930},{name:"Buhongwa", la:-2.480, lo:32.880},{name:"Nyamagana", la:-2.516, lo:32.900},{name:"Ilemela", la:-2.540, lo:32.920},{name:"Kiseke", la:-2.560, lo:32.940},{name:"Pasiansi", la:-2.500, lo:32.910},{name:"Kirumba", la:-2.520, lo:32.910},{name:"Isamilo", la:-2.530, lo:32.920}];
+    let best="Nyegezi", bestD=999; areas.forEach(a=>{ let d=Math.hypot(lat-a.la, lng-a.lo); if(d<bestD){ bestD=d; best=a.name; } });
+    document.getElementById('locFilter').value=best; setLocationFilter(best); alert('Uko karibu na '+best);
+  }, ()=>{ alert('Ruhusu Location kwenye simu'); });
+}
+function getMapLink(p){
+  if(p.latitude && p.longitude) return `https://www.google.com/maps/search/?api=1&query=${p.latitude},${p.longitude}`;
+  return `https://www.google.com/maps/search/${encodeURIComponent((p.location||'Nyegezi')+' '+(p.area||'')+' Mwanza')}`;
+}
+function esc(t){ return String(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+async function loadProducts(){
+  if(supabaseClient && SUPABASE_URL.startsWith("https")){
+    try{ let {data, error} = await supabaseClient.from('bidhaa').select('*').order('created_at',{ascending:false}); if(!error && data){ products=data; render(); return; } console.log(error); }catch(e){ console.log(e); }
+  }
+  products=[]; render();
+}
+function render(){
+  let s=document.getElementById('search').value.toLowerCase();
+  let f=products.filter(p=>{ let loc=(p.location||'Nyegezi'); let area=(p.area||''); let ms=(p.name+' '+p.vendor+' '+loc+' '+area).toLowerCase().includes(s); let mc= activeCat==="Zote" || p.category===activeCat; let ml= activeLocation==="Zote" || loc===activeLocation; return ms && mc && ml; });
+  if(f.length===0){ document.getElementById('grid').innerHTML='<div style="grid-column:1/3;text-align:center;padding:30px;color:#888"><div style="font-size:40px">Mahali</div><b>Hakuna bidhaa zinazopatikana '+esc(activeLocation)+'</b><br><button onclick="document.getElementById(\'locFilter\').value=\'Zote\';setLocationFilter(\'Zote\')" style="background:#fff;color:#000;border:none;padding:10px 20px;border-radius:100px;font-weight:900;margin-top:12px">ONA MWANZA YOTE</button></div>'; return; }
+  document.getElementById('grid').innerHTML=f.map(p=>`<div class="card"><div class="loc-badge">Mahali: ${esc(p.location||'Nyegezi')}</div><img src="${esc(p.image||p.picha_url)}" onerror="this.src='https://via.placeholder.com/300'"><div class="info"><div class="title">${esc(p.name)}</div><div class="price">TZS ${Number(p.price).toLocaleString()}</div><div class="meta"><span>${esc(p.vendor||'Admin')}</span></div><div class="loc-box"><b>INAPATIKANA HAPA:</b><div>${esc(p.location||'Nyegezi')}${p.area?' - '+esc(p.area):''}</div><small>Mwanza, Tanzania</small></div><a class="btn-map" href="${getMapLink(p)}" target="_blank">ONA RAMANI - CHEKI MAHALI</a><a href="https://wa.me/${esc(p.phone)}?text=${encodeURIComponent('Naulizia '+p.name+' - Bei '+p.price+' - Inapatikana wapi? Nimeona ipo: '+(p.location||'Nyegezi')+' '+(p.area||''))}" style="text-decoration:none"><button class="btn">NUNUA WHATSAPP</button></a>${isAdmin ? `<button class="btn-del" onclick="deleteProduct(${p.id})">FUTA BIDHAA HII (ADMIN)</button>` : ''}</div></div>`).join('');
+}
+function previewFile(el){ selectedFile=el.files[0]; if(selectedFile){ let r=new FileReader(); r.onload=e=>{document.getElementById('preview').src=e.target.result;document.getElementById('preview').style.display='block';document.getElementById('uploadText').style.display='none';}; r.readAsDataURL(selectedFile); } }
+function resetAddForm(){ selectedFile=null; document.getElementById('f_file').value=''; document.getElementById('f_name').value=''; document.getElementById('f_price').value=''; document.getElementById('f_cat').value=''; document.getElementById('f_area').value=''; document.getElementById('f_vendor').value=''; document.getElementById('f_phone').value=''; document.getElementById('preview').style.display='none'; document.getElementById('preview').src=''; document.getElementById('uploadText').style.display='block'; }
+function openPinModal(){ document.getElementById('pinModal').classList.add('show'); }
+function closePinModal(){ document.getElementById('pinModal').classList.remove('show'); }
+async function checkPin(){
+  let email=document.getElementById('adminEmail').value.trim();
+  let pass=document.getElementById('adminPass').value.trim();
+  if(!email||!pass) return alert('Weka Email na Password');
+  let {data, error} = await supabaseClient.auth.signInWithPassword({email, password: pass});
+  if(error) return alert('Email / Password sio sahihi! Mteja hawezi kuingia hapa.');
+  isAdmin = true;
+  document.getElementById('fabBtn').style.display='flex';
+  document.getElementById('adminBtn').innerText='ADMIN';
+  document.getElementById('adminBtn').style.background='#4ade80';
+  document.getElementById('showChangeBtn').style.display='inline-block';
+  closePinModal(); render();
+  alert('Karibu Admin! Sasa unaweza kuweka na kufuta.');
+}
+async function logoutAdmin(){
+  await supabaseClient.auth.signOut();
+  isAdmin=false;
+  document.getElementById('fabBtn').style.display='none';
+  document.getElementById('adminBtn').innerText='ADMIN';
+  document.getElementById('adminBtn').style.background='#fff';
+  document.getElementById('showChangeBtn').style.display='none';
+  document.getElementById('changePassBox').style.display='none';
+  closePinModal(); render();
+}
+async function checkSession(){
+  if(!supabaseClient) return;
+  let {data} = await supabaseClient.auth.getSession();
+  if(data.session){ isAdmin=true; document.getElementById('fabBtn').style.display='flex'; document.getElementById('adminBtn').innerText='ADMIN'; document.getElementById('adminBtn').style.background='#4ade80'; document.getElementById('showChangeBtn').style.display='inline-block'; }
+}
+function showChangePass(){
+  document.getElementById('changePassBox').style.display='block';
+  document.getElementById('showChangeBtn').style.display='none';
+}
+async function changePassword(){
+  let p1 = document.getElementById('newPass').value.trim();
+  let p2 = document.getElementById('newPass2').value.trim();
+  if(!p1 || p1.length < 6) return alert('Password mpya lazima iwe angalau herufi 6!');
+  if(p1 !== p2) return alert('Password hazifanani! Rudia vizuri.');
+  if(!confirm('Una uhakika unataka kubadili password?')) return;
+  let {data, error} = await supabaseClient.auth.updateUser({ password: p1 });
+  if(error) return alert('Imeshindikana: ' + error.message);
+  alert('Hongera! Password imebadilika.');
+  document.getElementById('changePassBox').style.display='none';
+  document.getElementById('newPass').value='';
+  document.getElementById('newPass2').value='';
+  closePinModal();
+}
+async function forgotPassword(){
+  let email=document.getElementById('adminEmail').value.trim();
+  if(!email) return alert('Weka Email yako kwanza hapo juu.');
+  let {error} = await supabaseClient.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin });
+  if(error) return alert('Imeshindikana: ' + error.message);
+  alert('Nimetuma link kwenye ' + email + '. Fungua Email yako, bonyeza link.');
+}
+function openModal(){ if(!isAdmin) return alert('Ingia kama Admin kwanza!'); document.getElementById('modal').classList.add('show'); }
+function closeModal(){ document.getElementById('modal').classList.remove('show'); }
+async function addProduct(){
+  if(!isAdmin) return alert('Admin tu anaweza kuweka!');
+  let n=document.getElementById('f_name').value.trim(); let p=document.getElementById('f_price').value; let cat=document.getElementById('f_cat').value; let v=document.getElementById('f_vendor').value.trim()||'Admin'; let ph=document.getElementById('f_phone').value.trim()||'255702379441';
+  let loc=document.getElementById('f_location').value; let area=document.getElementById('f_area').value.trim();
+  if(!n||!p||!cat) return alert('Jaza jina, bei na uchague kundi!');
+  if(!selectedFile) return alert('Chagua picha kwanza!');
+  if(ph){ph=ph.replace(/^0/,'').replace(/^\+/,'');if(!ph.startsWith('255'))ph='255'+ph;}
+  let btn=document.getElementById('addBtn');btn.innerText='INAPANDISHA...';btn.disabled=true;
+  try{
+    let lat = null, lng = null;
+    try{ let pos = await new Promise((res, rej)=> navigator.geolocation.getCurrentPosition(res, rej, {timeout:3000})); lat = pos.coords.latitude; lng = pos.coords.longitude; }catch(e){
+      let mapCoords = {"Nyegezi":[-2.498,32.926],"Rock City":[-2.518,32.901],"Igoma":[-2.530,32.890],"Nyakato":[-2.520,32.950],"Mkolani":[-2.510,32.930],"Buhongwa":[-2.480,32.880],"Nyamagana":[-2.516,32.900],"Ilemela":[-2.540,32.920],"Kiseke":[-2.560,32.940],"Pasiansi":[-2.500,32.910],"Kirumba":[-2.520,32.910],"Isamilo":[-2.530,32.920]};
+      if(mapCoords[loc]){ lat = mapCoords[loc][0]; lng = mapCoords[loc][1]; }
+    }
+    let fileName=Date.now()+'_'+selectedFile.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+    let {error:upErr}=await supabaseClient.storage.from('product-images').upload(fileName, selectedFile);
+    if(upErr) throw upErr;
+    let {data:pub}=supabaseClient.storage.from('product-images').getPublicUrl(fileName);
+    let {error}=await supabaseClient.from('bidhaa').insert([{name:n, price:parseInt(p), image:pub.publicUrl, picha_url:pub.publicUrl, category:cat, vendor:v, phone:ph, location:loc, area:area, latitude:lat, longitude:lng}]);
+    if(error) throw error;
+    alert('LIVE! Bidhaa imeongezwa');
+    closeModal(); resetAddForm(); loadProducts();
+  }catch(e){ alert('Error: '+e.message); }
+  btn.innerText='ONGEZA LIVE';btn.disabled=false;
+}
+async function deleteProduct(id){
+  if(!isAdmin) return alert('Hii ni kwa Admin tu!');
+  if(!confirm('Una uhakika unataka kuifuta bidhaa NA picha yake? Haitarudishwa!')) return;
+  try{
+    let p = products.find(x=>x.id===id);
+    let imgUrl = p ? (p.image||p.picha_url||'') : '';
+    let {error} = await supabaseClient.from('bidhaa').delete().eq('id', id);
+    if(error) throw error;
+    if(imgUrl && imgUrl.includes('product-images')){
+      let fileName = imgUrl.split('/product-images/')[1];
+      if(fileName){
+        fileName = decodeURIComponent(fileName.split('?')[0]);
+        await supabaseClient.storage.from('product-images').remove([fileName]);
+      }
+    }
+    products = products.filter(x=>x.id!==id); render(); alert('Bidhaa NA Picha zimefutwa!');
+  }catch(e){ alert('Supabase imezuia: '+e.message); }
+}
+renderCats(); checkSession(); loadProducts();
+</script>
+</body>
+</html>
