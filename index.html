@@ -1,480 +1,140 @@
+
 <!DOCTYPE html>
 <html lang="sw">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#101827">
 <title>GROX MARKET</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:Arial, sans-serif;
-}
-body{
-  background:#f3f5f8;
-  color:#172033;
-  padding-bottom:75px;
-}
-button,input,textarea,select{
-  font:inherit;
-}
-button{
-  cursor:pointer;
-  border:0;
-}
-#splash{
-  position:fixed;
-  inset:0;
-  z-index:9999;
-  background:#101827;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  color:white;
-  animation:splashOut .8s ease 2.3s forwards;
-}
-.splash-logo{
-  font-size:45px;
-  font-weight:900;
-  letter-spacing:5px;
-  animation:logoIn 1s ease;
-}
-.splash-line{
-  width:75px;
-  height:4px;
-  background:#20d6a0;
-  border-radius:20px;
-  margin-top:18px;
-  animation:lineIn 1.2s ease;
-}
-@keyframes logoIn{
-  from{opacity:0;transform:scale(.6)}
-  to{opacity:1;transform:scale(1)}
-}
-@keyframes lineIn{
-  from{width:0}
-  to{width:75px}
-}
-@keyframes splashOut{
-  to{opacity:0;visibility:hidden}
-}
-header{
-  background:#101827;
-  color:white;
-  padding:15px;
-}
-.top-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-}
-.location{
-  font-size:12px;
-  color:#cbd5e1;
-  margin-top:5px;
-}
-.header-actions{
-  display:flex;
-  gap:8px;
-}
-.small-btn{
-  background:#243247;
-  color:white;
-  padding:9px 12px;
-  border-radius:8px;
-  font-size:12px;
-}
-.search-area{
-  padding:14px;
-  background:white;
-  position:sticky;
-  top:0;
-  z-index:20;
-  box-shadow:0 2px 8px #0000000b;
-}
-.search-box{
-  display:flex;
-  align-items:center;
-  background:#f0f2f5;
-  border-radius:12px;
-  padding:0 12px;
-}
-.search-box input{
-  width:100%;
-  border:0;
-  outline:0;
-  background:transparent;
-  padding:14px 8px;
-  font-size:15px;
-}
-.search-icon{
-  font-size:19px;
-}
-.section{
-  padding:15px;
-}
-.section-title{
-  font-size:18px;
-  font-weight:800;
-  margin-bottom:12px;
-}
-.categories{
-  display:flex;
-  gap:9px;
-  overflow-x:auto;
-  padding-bottom:5px;
-}
-.category{
-  white-space:nowrap;
-  padding:10px 15px;
-  border-radius:30px;
-  background:white;
-  color:#273449;
-  border:1px solid #e4e8ee;
-  font-size:13px;
-}
-.category.active{
-  background:#101827;
-  color:white;
-}
-.products{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:12px;
-}
-.product{
-  background:white;
-  border-radius:13px;
-  overflow:hidden;
-  box-shadow:0 2px 9px #0000000b;
-  min-width:0;
-}
-.product img{
-  width:100%;
-  height:145px;
-  object-fit:cover;
-  background:#e7ebf0;
-}
-.product-info{
-  padding:10px;
-}
-.product-name{
-  font-size:14px;
-  font-weight:700;
-  line-height:1.4;
-  min-height:38px;
-  overflow-wrap:anywhere;
-}
-.product-price{
-  color:#07966e;
-  font-weight:800;
-  margin:7px 0;
-  font-size:15px;
-}
-.product-location,.seller-name{
-  color:#687386;
-  font-size:11px;
-  margin-top:5px;
-  overflow-wrap:anywhere;
-}
-.product-buttons{
-  display:flex;
-  gap:6px;
-  margin-top:10px;
-}
-.product-buttons button{
-  flex:1;
-  padding:9px 5px;
-  border-radius:7px;
-  background:#101827;
-  color:white;
-  font-size:11px;
-}
-.product-buttons .whatsapp{
-  background:#0aaf72;
-}
-.empty{
-  grid-column:1/-1;
-  text-align:center;
-  padding:35px 10px;
-  color:#778195;
-  background:white;
-  border-radius:12px;
-}
-.panel{
-  background:white;
-  margin:15px;
-  padding:15px;
-  border-radius:13px;
-  box-shadow:0 2px 9px #0000000b;
-}
-.panel h2{
-  font-size:18px;
-  margin-bottom:13px;
-}
-.field{
-  margin-bottom:12px;
-}
-.field label{
-  display:block;
-  font-size:13px;
-  font-weight:700;
-  margin-bottom:6px;
-}
-.field input,.field textarea,.field select{
-  width:100%;
-  border:1px solid #dce1e8;
-  border-radius:9px;
-  padding:12px;
-  outline:none;
-  background:white;
-}
-.field textarea{
-  min-height:80px;
-  resize:vertical;
-}
-.main-btn{
-  width:100%;
-  padding:13px;
-  background:#101827;
-  color:white;
-  border-radius:9px;
-  font-weight:700;
-}
-.green-btn{
-  background:#0aaf72;
-}
-.danger-btn{
-  background:#c93636;
-}
-.notice{
-  font-size:13px;
-  color:#667085;
-  line-height:1.5;
-  margin:10px 0;
-}
-.hidden{
-  display:none!important;
-}
-.bottom-nav{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  background:white;
-  display:flex;
-  justify-content:space-around;
-  padding:10px 4px;
-  box-shadow:0 -2px 12px #00000012;
-  z-index:50;
-}
-.nav-btn{
-  background:transparent;
-  color:#687386;
-  font-size:11px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:4px;
-}
-.nav-btn span{
-  font-size:20px;
-}
-.nav-btn.active{
-  color:#07966e;
-  font-weight:800;
-}
-#message{
-  margin:12px 15px;
-  padding:10px;
-  border-radius:8px;
-  font-size:13px;
-  display:none;
-}
-@media(min-width:700px){
-  .products{
-    grid-template-columns:repeat(4,minmax(0,1fr));
-  }
-  .product img{
-    height:180px;
-  }
-  main{
-    max-width:1100px;
-    margin:auto;
-  }
-}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f3f5f8;color:#172033}
+header{background:#101b35;color:white;padding:17px;position:sticky;top:0;z-index:10}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.logo{font-size:25px;font-weight:bold;color:#36d399}
+button{border:0;padding:11px 15px;border-radius:8px;background:#087f5b;color:white;font-weight:bold;cursor:pointer}
+button.secondary{background:#263653}
+input,select,textarea{width:100%;padding:12px;margin:7px 0;border:1px solid #d4dbe5;border-radius:8px;font-size:15px}
+nav{display:flex;gap:8px;overflow:auto;padding:12px;background:white}
+nav button{white-space:nowrap}
+main{padding:14px;max-width:1100px;margin:auto}
+.section{background:white;padding:15px;border-radius:12px;margin-bottom:15px}
+h2{font-size:20px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px}
+.product{background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 9px #0001}
+.product img{width:100%;height:145px;object-fit:cover;background:#e7ebf0}
+.product-info{padding:10px}
+.product-info h3{font-size:15px;margin-bottom:7px}
+.price{color:#087f5b;font-weight:bold;margin:7px 0}
+.product-location{font-size:12px;color:#687386}
+.hidden{display:none!important}
+.small{font-size:13px;color:#667085}
+footer{text-align:center;padding:25px;color:#667085}
+#splash{position:fixed;inset:0;background:#101b35;color:white;display:flex;align-items:center;justify-content:center;z-index:1000}
+#splash h1{font-size:42px;color:#36d399}
 </style>
 </head>
 
 <body>
 
 <div id="splash">
-  <div class="splash-logo">GROX</div>
-  <div class="splash-line"></div>
+  <h1>GROX MARKET</h1>
 </div>
 
 <header>
-  <div class="top-row">
-    <div>
-      <div style="font-size:19px;font-weight:800">All Market</div>
-      <div class="location" id="locationText">Soko la bidhaa mbalimbali</div>
-    </div>
-    <div class="header-actions">
-      <button class="small-btn" onclick="showPage('sellerPage')">Muuzaji</button>
-    </div>
+  <div class="top">
+    <div class="logo">GROX MARKET</div>
+    <button class="secondary" onclick="showPage('account')">Akaunti</button>
   </div>
 </header>
 
-<div class="search-area">
-  <div class="search-box">
-    <span class="search-icon">⌕</span>
-    <input id="searchInput" type="search"
-      placeholder="Tafuta bidhaa au jina la muuzaji..."
-      oninput="renderProducts()">
-  </div>
-</div>
-
-<main>
-  <div id="message"></div>
-
-  <section id="homePage">
-    <div class="section">
-      <div class="section-title">Categories</div>
-      <div class="categories">
-        <button class="category active" onclick="chooseCategory('Zote',this)">Zote</button>
-        <button class="category" onclick="chooseCategory('Electronics',this)">Electronics</button>
-        <button class="category" onclick="chooseCategory('Fashion',this)">Fashion</button>
-        <button class="category" onclick="chooseCategory('Home',this)">Home</button>
-        <button class="category" onclick="chooseCategory('Vehicles',this)">Vehicles</button>
-        <button class="category" onclick="chooseCategory('Others',this)">Others</button>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-title" id="marketTitle">Bidhaa zote</div>
-      <div class="products" id="productsList">
-        <div class="empty">Inapakia bidhaa...</div>
-      </div>
-    </div>
-  </section>
-
-  <section id="sellerPage" class="hidden">
-    <div class="panel">
-      <h2>Akaunti ya Muuzaji</h2>
-
-      <div id="authArea">
-        <div class="field">
-          <label>Jina lako</label>
-          <input id="sellerName" type="text" placeholder="Andika jina lako">
-        </div>
-
-        <div class="field">
-          <label>Namba ya simu</label>
-          <input id="sellerPhone" type="tel" placeholder="Mfano 07XXXXXXXX">
-        </div>
-
-        <div class="field">
-          <label>Email</label>
-          <input id="sellerEmail" type="email" placeholder="Email yako">
-        </div>
-
-        <div class="field">
-          <label>Password</label>
-          <input id="sellerPassword" type="password" placeholder="Password">
-        </div>
-
-        <button class="main-btn" onclick="registerSeller()">Fungua akaunti</button>
-        <div style="height:9px"></div>
-        <button class="main-btn green-btn" onclick="loginSeller()">Ingia kwenye akaunti</button>
-
-        <p class="notice">
-          Kama tayari una akaunti, tumia email na password kuingia.
-          Kama unafungua akaunti mpya, jaza jina na namba ya simu pia.
-        </p>
-      </div>
-
-      <div id="sellerArea" class="hidden">
-        <p id="sellerWelcome" style="margin-bottom:12px;font-weight:700"></p>
-
-        <h2>Weka bidhaa mpya</h2>
-
-        <div class="field">
-          <label>Jina la bidhaa</label>
-          <input id="productName" type="text" placeholder="Mfano: Simu ya Samsung">
-        </div>
-
-        <div class="field">
-          <label>Bei (TSh)</label>
-          <input id="productPrice" type="number" min="0" placeholder="Mfano: 250000">
-        </div>
-
-        <div class="field">
-          <label>Maelezo ya bidhaa</label>
-          <textarea id="productDescription" placeholder="Elezea bidhaa yako"></textarea>
-        </div>
-
-        <div class="field">
-          <label>Eneo ulipo</label>
-          <input id="productLocation" type="text" placeholder="Mfano: Mwanza">
-        </div>
-
-        <div class="field">
-          <label>Picha ya bidhaa</label>
-          <input id="productImage" type="file" accept="image/*">
-        </div>
-
-        <button class="main-btn green-btn" onclick="addProduct()">Weka bidhaa sokoni</button>
-
-        <hr style="margin:20px 0;border:0;border-top:1px solid #eee">
-
-        <h2>Bidhaa zangu</h2>
-        <div id="myProducts" class="products"></div>
-
-        <div style="height:15px"></div>
-        <button class="main-btn danger-btn" onclick="logoutSeller()">Toka kwenye akaunti</button>
-      </div>
-    </div>
-  </section>
-
-  <section id="accountPage" class="hidden">
-    <div class="panel">
-      <h2>Kuhusu GROX MARKET</h2>
-      <p class="notice">
-        GROX MARKET ni soko la mtandaoni linalowaunganisha
-        wauzaji na wanunuzi wa bidhaa mbalimbali.
-      </p>
-      <p class="notice">
-        Wanunuzi wanaweza kutafuta bidhaa au jina la muuzaji.
-        Wauzaji wanaweza kufungua akaunti na kuweka bidhaa zao.
-      </p>
-    </div>
-  </section>
-</main>
-
-<nav class="bottom-nav">
-  <button class="nav-btn active" id="navHome" onclick="showPage('homePage')">
-    <span>⌂</span>Home
-  </button>
-  <button class="nav-btn" id="navSeller" onclick="showPage('sellerPage')">
-    <span>＋</span>Sell
-  </button>
-  <button class="nav-btn" id="navAccount" onclick="showPage('accountPage')">
-    <span>☰</span>Account
-  </button>
+<nav>
+  <button onclick="showPage('home')">All Market</button>
+  <button onclick="showPage('add')">Weka bidhaa</button>
+  <button onclick="showPage('myproducts')">Bidhaa zangu</button>
+  <button onclick="showPage('account')">Akaunti</button>
+  <button onclick="showPage('admin')">Admin</button>
 </nav>
 
-<script>
-  // =====================================
-// SUPABASE CONNECTION
-// =====================================
+<main>
 
+<section id="home" class="page">
+  <div class="section">
+    <h2>Karibu GROX MARKET</h2>
+    <input id="search" placeholder="Tafuta bidhaa au jina la muuzaji..." oninput="renderProducts()">
+    <select id="category" onchange="renderProducts()">
+      <option value="">Makundi yote</option>
+      <option>Elektroniki</option>
+      <option>Mavazi</option>
+      <option>Samani</option>
+      <option>Vyakula</option>
+      <option>Vingine</option>
+    </select>
+  </div>
+  <div id="products" class="grid"></div>
+</section>
+
+<section id="add" class="page hidden">
+  <div class="section">
+    <h2>Weka bidhaa mpya</h2>
+    <p class="small">Ingia kwanza kwenye akaunti yako ya muuzaji.</p>
+    <input id="pname" placeholder="Jina la bidhaa">
+    <input id="pprice" type="number" placeholder="Bei ya bidhaa">
+    <input id="parea" placeholder="Eneo bidhaa ilipo">
+    <select id="pcategory">
+      <option>Elektroniki</option>
+      <option>Mavazi</option>
+      <option>Samani</option>
+      <option>Vyakula</option>
+      <option>Vingine</option>
+    </select>
+    <textarea id="pdescription" placeholder="Maelezo ya bidhaa"></textarea>
+    <input id="pimage" type="file" accept="image/*">
+    <button onclick="addProduct()">Hifadhi bidhaa</button>
+    <p id="addMessage"></p>
+  </div>
+</section>
+
+<section id="myproducts" class="page hidden">
+  <div class="section">
+    <h2>Bidhaa zangu</h2>
+    <div id="myProductList"></div>
+  </div>
+</section>
+
+<section id="account" class="page hidden">
+  <div class="section">
+    <h2>Akaunti ya muuzaji</h2>
+    <input id="sellerName" placeholder="Jina lako">
+    <input id="sellerEmail" type="email" placeholder="Barua pepe">
+    <input id="sellerPassword" type="password" placeholder="Nenosiri">
+    <input id="sellerPhone" placeholder="Namba ya simu">
+    <button onclick="registerSeller()">Fungua akaunti</button>
+    <hr>
+    <h2>Ingia kwenye akaunti</h2>
+    <input id="loginEmail" type="email" placeholder="Barua pepe">
+    <input id="loginPassword" type="password" placeholder="Nenosiri">
+    <button onclick="loginSeller()">Ingia</button>
+    <button class="secondary" onclick="logoutSeller()">Toka</button>
+    <p id="accountMessage"></p>
+  </div>
+</section>
+
+<section id="admin" class="page hidden">
+  <div class="section">
+    <h2>GROX Admin</h2>
+    <p class="small">Sehemu ya kusimamia malipo na akaunti za wauzaji itaunganishwa katika sehemu ya pili.</p>
+    <div id="adminContent"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>GROX MARKET © 2026</footer>
+
+<script>
 const SUPABASE_URL = "https://exwdildhebdrweqpdjkb.supabase.co";
 const SUPABASE_KEY = "sb_publishable_rsV-RqT04ZH-HzbJNpqMfw_5uKsyKUB";
 
@@ -485,555 +145,593 @@ const db = window.supabase.createClient(
 
 let currentUser = null;
 let allProducts = [];
-let selectedCategory = "Zote";
 
-// =====================================
-// MESSAGE
-// =====================================
+function showPage(page){
+  document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
+  document.getElementById(page).classList.remove("hidden");
 
-function showMessage(message){
-  const box = document.getElementById("message");
-  box.textContent = message;
-  box.style.display = "block";
-
-  setTimeout(()=>{
-    box.style.display = "none";
-  },5000);
+  if(page==="myproducts") loadMyProducts();
+  if(page==="admin") loadAdmin();
 }
-
-// =====================================
-// PAGE NAVIGATION
-// =====================================
-
-function showPage(pageId){
-  document.getElementById("homePage").classList.add("hidden");
-  document.getElementById("sellerPage").classList.add("hidden");
-  document.getElementById("accountPage").classList.add("hidden");
-
-  document.getElementById(pageId).classList.remove("hidden");
-
-  document.querySelectorAll(".nav-btn").forEach(btn=>{
-    btn.classList.remove("active");
-  });
-
-  if(pageId === "homePage"){
-    document.getElementById("navHome").classList.add("active");
-  }
-
-  if(pageId === "sellerPage"){
-    document.getElementById("navSeller").classList.add("active");
-  }
-
-  if(pageId === "accountPage"){
-    document.getElementById("navAccount").classList.add("active");
-  }
-
-  if(pageId === "sellerPage"){
-    updateSellerArea();
-  }
-}
-
-// =====================================
-// SAFE HTML TEXT
-// =====================================
-
-function safeText(value){
-  return String(value ?? "").replace(/[&<>"']/g,char=>{
-    return {
-      "&":"&amp;",
-      "<":"&lt;",
-      ">":"&gt;",
-      '"':"&quot;",
-      "'":"&#039;"
-    }[char];
-  });
-}
-
-// =====================================
-// REGISTER SELLER
-// =====================================
 
 async function registerSeller(){
-  const name = document.getElementById("sellerName").value.trim();
-  const phone = document.getElementById("sellerPhone").value.trim();
-  const email = document.getElementById("sellerEmail").value.trim();
-  const password = document.getElementById("sellerPassword").value;
+  const name=document.getElementById("sellerName").value.trim();
+  const email=document.getElementById("sellerEmail").value.trim();
+  const password=document.getElementById("sellerPassword").value;
+  const phone=document.getElementById("sellerPhone").value.trim();
 
-  if(!name || !phone || !email || !password){
-    showMessage("Jaza taarifa zote kwanza.");
-    return;
+  if(!name||!email||!password||!phone){
+    return alert("Jaza taarifa zote.");
   }
 
-  if(password.length < 6){
-    showMessage("Password iwe na herufi au namba zisizopungua 6.");
-    return;
-  }
-
-  const {data,error} = await db.auth.signUp({
-    email:email,
-    password:password,
-    options:{
-      data:{
-        seller_name:name,
-        seller_phone:phone
-      }
-    }
+  const {data,error}=await db.auth.signUp({
+    email,password,
+    options:{data:{jina:name,phone:phone}}
   });
 
-  if(error){
-    showMessage(error.message);
-    return;
-  }
+  if(error)return alert(error.message);
 
-  if(data.session){
-    currentUser = data.user;
-    updateSellerArea();
-    showMessage("Akaunti imefunguliwa kikamilifu.");
-  }else{
-    showMessage("Akaunti imetengenezwa. Angalia email yako kama uthibitisho unahitajika, kisha ingia.");
-  }
+  alert("Usajili umetumwa. Thibitisha barua pepe ikiwa utaombwa.");
 }
-
-// =====================================
-// LOGIN SELLER
-// =====================================
 
 async function loginSeller(){
-  const email = document.getElementById("sellerEmail").value.trim();
-  const password = document.getElementById("sellerPassword").value;
+  const email=document.getElementById("loginEmail").value.trim();
+  const password=document.getElementById("loginPassword").value;
 
-  if(!email || !password){
-    showMessage("Weka email na password.");
-    return;
-  }
-
-  const {data,error} = await db.auth.signInWithPassword({
-    email:email,
-    password:password
+  const {data,error}=await db.auth.signInWithPassword({
+    email,password
   });
 
-  if(error){
-    showMessage(error.message);
-    return;
-  }
+  if(error)return alert(error.message);
 
-  currentUser = data.user;
-  updateSellerArea();
-  showMessage("Umeingia kwenye akaunti yako.");
+  currentUser=data.user;
+  document.getElementById("accountMessage").textContent="Umeingia kikamilifu.";
+  await loadProducts();
 }
-
-// =====================================
-// LOGOUT
-// =====================================
 
 async function logoutSeller(){
-  const {error} = await db.auth.signOut();
-
-  if(error){
-    showMessage(error.message);
-    return;
-  }
-
-  currentUser = null;
-  updateSellerArea();
-  showMessage("Umetoka kwenye akaunti.");
+  await db.auth.signOut();
+  currentUser=null;
+  alert("Umetoka kwenye akaunti.");
 }
-
-// =====================================
-// UPDATE SELLER AREA
-// =====================================
-
-function updateSellerArea(){
-  const authArea = document.getElementById("authArea");
-  const sellerArea = document.getElementById("sellerArea");
-
-  if(currentUser){
-    authArea.classList.add("hidden");
-    sellerArea.classList.remove("hidden");
-
-    const name =
-      currentUser.user_metadata?.seller_name ||
-      currentUser.email;
-
-    document.getElementById("sellerWelcome").textContent =
-      "Karibu, " + name;
-
-    loadMyProducts();
-  }else{
-    authArea.classList.remove("hidden");
-    sellerArea.classList.add("hidden");
-  }
-}
-
-// =====================================
-// LOAD ALL PRODUCTS
-// =====================================
 
 async function loadProducts(){
-  const {data,error} = await db
-    .from("bidhaa")
-    .select("*")
-    .order("created_at",{ascending:false});
+  const {data,error}=await db.from("bidhaa").select("*").order("created_at",{ascending:false});
 
   if(error){
-    document.getElementById("productsList").innerHTML =
-      '<div class="empty">Imeshindikana kupakia bidhaa. Hakikisha jedwali la bidhaa lipo Supabase.</div>';
-    console.log(error);
+    console.error(error);
     return;
   }
 
-  allProducts = data || [];
+  allProducts=data||[];
   renderProducts();
 }
-
-// =====================================
-// CATEGORY FILTER
-// =====================================
-
-function chooseCategory(category,button){
-  selectedCategory = category;
-
-  document.querySelectorAll(".category").forEach(btn=>{
-    btn.classList.remove("active");
-  });
-
-  button.classList.add("active");
-  renderProducts();
-}
-
-function productMatchesCategory(product,category){
-  if(category === "Zote") return true;
-
-  const text = (
-    (product.jina || "") + " " +
-    (product.maelezo || "")
-  ).toLowerCase();
-
-  const words = {
-    Electronics:["simu","computer","laptop","tv","radio","electronics","charger","earphone"],
-    Fashion:["nguo","viatu","shati","suruali","fashion","dress","bag"],
-    Home:["meza","kiti","kitanda","nyumba","home","sofa","friji"],
-    Vehicles:["gari","pikipiki","baiskeli","vehicle","motorcycle"],
-    Others:[]
-  };
-
-  if(category === "Others"){
-    return !Object.keys(words)
-      .filter(key=>key !== "Others")
-      .some(key=>words[key].some(word=>text.includes(word)));
-  }
-
-  return words[category]?.some(word=>text.includes(word)) || false;
-}
-
-// =====================================
-// DISPLAY PRODUCTS AND SEARCH
-// =====================================
 
 function renderProducts(){
-  const container = document.getElementById("productsList");
-  const query = document.getElementById("searchInput").value
-    .trim()
-    .toLowerCase();
+  const search=(document.getElementById("search")?.value||"").toLowerCase();
+  const category=document.getElementById("category")?.value||"";
 
-  let results = allProducts.filter(product=>{
-    const productName = (product.jina || "").toLowerCase();
-    const sellerName = (product.seller_name || "").toLowerCase();
-    const description = (product.maelezo || "").toLowerCase();
-    const location = (product.eneo || "").toLowerCase();
-
-    const matchesSearch =
-      !query ||
-      productName.includes(query) ||
-      sellerName.includes(query) ||
-      description.includes(query) ||
-      location.includes(query);
-
-    return matchesSearch &&
-      productMatchesCategory(product,selectedCategory);
+  const filtered=allProducts.filter(p=>{
+    const name=(p.jina||p.name||"").toLowerCase();
+    const seller=(p.seller_name||p.vendor||"").toLowerCase();
+    const cat=(p.category||"");
+    return (name.includes(search)||seller.includes(search)) &&
+      (!category||cat===category);
   });
 
-  if(query){
-    const sellerFound = allProducts.some(product=>
-      (product.seller_name || "").toLowerCase() === query
-    );
-
-    if(sellerFound){
-      results = results.filter(product=>
-        (product.seller_name || "").toLowerCase() === query
-      );
-    }
-  }
-
-  document.getElementById("marketTitle").textContent =
-    query ? "Matokeo ya utafutaji" : "Bidhaa zote";
-
-  if(results.length === 0){
-    container.innerHTML =
-      '<div class="empty">Hakuna bidhaa zilizopatikana.</div>';
-    return;
-  }
-
-  container.innerHTML = results.map(product=>{
-    const image = product.picha_url || product.image || "";
-    const name = safeText(product.jina || "Bidhaa");
-    const price = Number(product.bei || 0).toLocaleString("en-US");
-    const location = safeText(product.eneo || "Eneo halijawekwa");
-    const seller = safeText(product.seller_name || "Muuzaji");
-    const phone = String(product.seller_phone || "").replace(/\D/g,"");
-
-    const imageHTML = image
-      ? `<img src="${safeText(image)}" alt="${name}" loading="lazy">`
-      : `<div style="height:145px;display:grid;place-items:center;background:#e7ebf0;color:#778195">Hakuna picha</div>`;
-
-    const whatsappNumber = phone.startsWith("0")
-      ? "255" + phone.substring(1)
-      : phone;
-
+  document.getElementById("products").innerHTML=filtered.map(p=>{
+    const name=p.jina||p.name||"Bidhaa";
+    const price=p.bei??p.price??0;
+    const image=p.picha_url||p.image||"";
+    const location=p.eneo||p.location||p.area||"";
     return `
-      <article class="product">
-        ${imageHTML}
+      <div class="product">
+        <img src="${escapeHTML(image)}" alt="Bidhaa">
         <div class="product-info">
-          <div class="product-name">${name}</div>
-          <div class="product-price">TSh ${price}</div>
-          <div class="product-location">📍 ${location}</div>
-          <div class="seller-name">Muuzaji: ${seller}</div>
-
-          <div class="product-buttons">
-            ${
-              whatsappNumber
-              ? `<button class="whatsapp" onclick="contactSeller('${whatsappNumber}')">WhatsApp</button>`
-              : `<button disabled>Hakuna simu</button>`
-            }
-          </div>
+          <h3>${escapeHTML(name)}</h3>
+          <div class="price">TSh ${Number(price).toLocaleString("sw-TZ")}</div>
+          <div class="product-location">${escapeHTML(location)}</div>
+          <p class="small">${escapeHTML(p.seller_name||p.vendor||"")}</p>
         </div>
-      </article>
-    `;
+      </div>`;
   }).join("");
 }
 
-// =====================================
-// CONTACT SELLER
-// =====================================
-
-function contactSeller(phone){
-  const message = encodeURIComponent(
-    "Habari, nimeiona bidhaa yako kwenye GROX MARKET. Naomba maelezo zaidi."
-  );
-
-  window.open(
-    "https://wa.me/" + phone + "?text=" + message,
-    "_blank"
-  );
+function escapeHTML(value){
+  return String(value??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",
+    '"':"&quot;","'":"&#39;"
+  })[c]);
 }
 
-// =====================================
-// ADD PRODUCT
-// =====================================
+async function loadMyProducts(){
+  if(!currentUser){
+    document.getElementById("myProductList").textContent="Ingia kwanza.";
+    return;
+  }
+
+  const {data,error}=await db.from("bidhaa")
+    .select("*").eq("seller_id",currentUser.id);
+
+  if(error){
+    document.getElementById("myProductList").textContent=error.message;
+    return;
+  }
+
+  document.getElementById("myProductList").innerHTML=(data||[]).map(p=>
+    `<p>${escapeHTML(p.jina||p.name)} — TSh ${Number(p.bei||p.price||0).toLocaleString()}</p>`
+  ).join("")||"Bado huna bidhaa.";
+}
 
 async function addProduct(){
   if(!currentUser){
-    showMessage("Ingia kwenye akaunti kwanza.");
+    return alert("Ingia kwanza kwenye akaunti yako.");
+  }
+
+  document.getElementById("addMessage").textContent=
+    "Tutaunganisha uthibitisho wa usajili na upakiaji wa picha katika sehemu ya pili.";
+}
+
+async function loadAdmin(){
+  document.getElementById("adminContent").textContent=
+    "Ukurasa wa Admin utaunganishwa katika sehemu ya pili.";
+}
+
+async function startApp(){
+  const {data}=await db.auth.getSession();
+  currentUser=data.session?.user||null;
+  await loadProducts();
+  setTimeout(()=>{
+    document.getElementById("splash").classList.add("hidden");
+  },3000);
+}
+
+db.auth.onAuthStateChange((_event,session)=>{
+  currentUser=session?.user||null;
+});
+
+startApp();
+</script>
+
+<!-- SEHEMU YA PILI ITAUNGANISHWA HAPA CHINI -->
+</body>
+    </html>
+
+
+<script>
+/* =====================================
+   GROX MARKET - SEHEMU YA PILI
+   MALIPO, ADMIN NA BIDHAA
+===================================== */
+
+let groxSubscription = null;
+
+/* 1. KUPATA TAARIFA ZA AKAUNTI */
+
+async function getGroxSubscription(){
+  if(!currentUser) return null;
+
+  const {data,error}=await db
+    .from("grox_subscriptions")
+    .select("*")
+    .eq("user_id",currentUser.id)
+    .maybeSingle();
+
+  if(error){
+    console.error(error);
+    return null;
+  }
+
+  groxSubscription=data;
+  return data;
+}
+
+/* 2. KUONYESHA HALI YA AKAUNTI */
+
+async function showGroxAccount(){
+  const section=document.getElementById("account");
+  if(!section) return;
+
+  let panel=document.getElementById("groxPaymentPanel");
+
+  if(!panel){
+    panel=document.createElement("div");
+    panel.id="groxPaymentPanel";
+    panel.className="section";
+    section.appendChild(panel);
+  }
+
+  if(!currentUser){
+    panel.innerHTML="<h2>Malipo ya GROX</h2><p>Ingia kwanza ili kuona hali ya akaunti yako.</p>";
     return;
   }
 
-  const name = document.getElementById("productName").value.trim();
-  const price = Number(document.getElementById("productPrice").value);
-  const description = document.getElementById("productDescription").value.trim();
-  const location = document.getElementById("productLocation").value.trim();
-  const file = document.getElementById("productImage").files[0];
+  const sub=await getGroxSubscription();
 
-  if(!name || !price || price <= 0 || !location || !file){
-    showMessage("Jaza jina, bei, eneo na picha ya bidhaa.");
+  const {data:setting}=await db
+    .from("grox_settings")
+    .select("setting_value")
+    .eq("setting_key","payment_phone")
+    .maybeSingle();
+
+  const paymentPhone=setting?.setting_value||"Namba haijawekwa";
+
+  let status="Hujalipia akaunti bado.";
+  let paymentType="initial";
+
+  if(sub?.is_suspended){
+    status="Akaunti yako imesimamishwa na Admin.";
+  }else if(sub?.initial_paid && sub?.subscription_expires_at){
+    const expiry=new Date(sub.subscription_expires_at);
+    if(expiry>new Date()){
+      status="Akaunti yako iko hai mpaka "+expiry.toLocaleString("sw-TZ");
+      paymentType="monthly";
+    }else{
+      status="Muda wa usajili umeisha. Lipa TSh 10,000 kuendelea.";
+      paymentType="monthly";
+    }
+  }
+
+  const {data:pending}=await db
+    .from("grox_payment_requests")
+    .select("id,status,payment_type,amount,submitted_at")
+    .eq("seller_id",currentUser.id)
+    .eq("status","pending")
+    .order("submitted_at",{ascending:false})
+    .limit(1);
+
+  panel.innerHTML=`
+    <h2>Usajili na Malipo ya GROX</h2>
+    <p><b>Hali ya akaunti:</b> ${escapeHTML(status)}</p>
+    <p><b>Namba ya Tigo Pesa:</b> ${escapeHTML(paymentPhone)}</p>
+    ${
+      pending?.length
+      ? `<p style="color:#b7791f;margin-top:10px">Ombi lako la malipo linasubiri uthibitisho wa Admin.</p>`
+      : `
+        <hr style="margin:14px 0">
+        <h3>${paymentType==="initial"?"Malipo ya kwanza":"Malipo ya mwezi"}</h3>
+        <p class="price">TSh ${paymentType==="initial"?"5,000":"10,000"}</p>
+        <p class="small">Tuma malipo kwa namba iliyoonyeshwa hapo juu. Kisha weka kumbukumbu ya muamala hapa chini.</p>
+        <input id="groxReference" placeholder="Namba ya kumbukumbu ya muamala">
+        <button onclick="submitGroxPayment('${paymentType}')">Tuma uthibitisho wa malipo</button>
+      `
+    }
+    <p id="groxPaymentMessage" style="margin-top:10px"></p>
+  `;
+}
+
+/* 3. KUTUMA OMBI LA MALIPO */
+
+window.submitGroxPayment=async function(type){
+  if(!currentUser) return alert("Ingia kwanza.");
+
+  const reference=document.getElementById("groxReference")?.value.trim();
+
+  if(!reference) return alert("Weka kumbukumbu ya muamala.");
+
+  if(!["initial","monthly"].includes(type)){
+    return alert("Aina ya malipo si sahihi.");
+  }
+
+  const message=document.getElementById("groxPaymentMessage");
+  message.textContent="Inatuma ombi...";
+
+  const {error}=await db.rpc("submit_grox_payment",{
+    p_payment_type:type,
+    p_transaction_ref:reference
+  });
+
+  if(error){
+    message.textContent="Imeshindikana: "+error.message;
     return;
   }
 
-  if(file.size > 5 * 1024 * 1024){
-    showMessage("Picha iwe chini ya 5MB.");
+  message.textContent="Ombi limetumwa. Subiri Admin athibitishe malipo yako.";
+  await showGroxAccount();
+};
+
+/* 4. KUONGEZA BIDHAA NA PICHA */
+
+window.addProduct=async function(){
+  if(!currentUser){
+    return alert("Ingia kwanza kwenye akaunti yako.");
+  }
+
+  const message=document.getElementById("addMessage");
+  const name=document.getElementById("pname").value.trim();
+  const price=Number(document.getElementById("pprice").value);
+  const area=document.getElementById("parea").value.trim();
+  const category=document.getElementById("pcategory").value;
+  const description=document.getElementById("pdescription").value.trim();
+  const file=document.getElementById("pimage").files[0];
+
+  if(!name||!price||price<=0||!area||!file){
+    message.textContent="Jaza jina, bei, eneo na chagua picha.";
     return;
   }
 
-  const allowedTypes = ["image/jpeg","image/png","image/webp"];
-
-  if(!allowedTypes.includes(file.type)){
-    showMessage("Tumia picha ya JPG, PNG au WEBP.");
+  if(file.size>5*1024*1024){
+    message.textContent="Picha iwe chini ya MB 5.";
     return;
   }
 
-  showMessage("Inapakia bidhaa...");
+  const {data:sub,error:subError}=await db
+    .from("grox_subscriptions")
+    .select("*")
+    .eq("user_id",currentUser.id)
+    .maybeSingle();
 
-  const extension = file.name.split(".").pop();
-  const fileName =
-    currentUser.id + "/" + Date.now() + "." + extension;
+  if(subError){
+    message.textContent="Imeshindikana kukagua akaunti: "+subError.message;
+    return;
+  }
 
-  const {error:uploadError} = await db.storage
+  if(
+    !sub ||
+    !sub.initial_paid ||
+    sub.is_suspended ||
+    !sub.subscription_expires_at ||
+    new Date(sub.subscription_expires_at)<=new Date()
+  ){
+    message.textContent="Akaunti yako haijaidhinishwa au muda umeisha. Kamilisha malipo kwanza.";
+    return;
+  }
+
+  message.textContent="Inapakia picha...";
+
+  const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+  const path=currentUser.id+"/"+Date.now()+"-"+safeName;
+
+  const {data:uploaded,error:uploadError}=await db
+    .storage
     .from("product-images")
-    .upload(fileName,file,{
-      cacheControl:"3600",
-      upsert:false
+    .upload(path,file,{
+      upsert:false,
+      contentType:file.type
     });
 
   if(uploadError){
-    showMessage("Picha haijapakiwa: " + uploadError.message);
+    message.textContent="Picha haikupakiwa: "+uploadError.message;
     return;
   }
 
-  const {data:imageData} = db.storage
+  const {data:urlData}=db
+    .storage
     .from("product-images")
-    .getPublicUrl(fileName);
+    .getPublicUrl(uploaded.path);
 
-  const sellerName =
-    currentUser.user_metadata?.seller_name ||
-    currentUser.email;
+  const profile=currentUser.user_metadata||{};
 
-  const sellerPhone =
-    currentUser.user_metadata?.seller_phone || "";
-
-  const productData = {
-    jina:name,
-    bei:price,
-    maelezo:description,
-    eneo:location,
-    picha_url:imageData.publicUrl,
-    seller_id:currentUser.id,
-    seller_name:sellerName,
-    seller_phone:sellerPhone
-  };
-
-  const {error:insertError} = await db
+  const {error:insertError}=await db
     .from("bidhaa")
-    .insert(productData);
+    .insert({
+      jina:name,
+      bei:price,
+      eneo:area,
+      category:category,
+      maelezo:description,
+      picha_url:urlData.publicUrl,
+      seller_id:currentUser.id,
+      seller_name:profile.jina||"Muuzaji",
+      seller_phone:profile.phone||""
+    });
 
   if(insertError){
-    showMessage("Bidhaa haijawekwa: " + insertError.message);
+    message.textContent="Bidhaa haijahifadhiwa: "+insertError.message;
     return;
   }
 
-  document.getElementById("productName").value = "";
-  document.getElementById("productPrice").value = "";
-  document.getElementById("productDescription").value = "";
-  document.getElementById("productLocation").value = "";
-  document.getElementById("productImage").value = "";
-
-  showMessage("Bidhaa imewekwa GROX MARKET.");
+  message.textContent="Bidhaa imehifadhiwa kikamilifu!";
+  document.getElementById("pname").value="";
+  document.getElementById("pprice").value="";
+  document.getElementById("parea").value="";
+  document.getElementById("pdescription").value="";
+  document.getElementById("pimage").value="";
 
   await loadProducts();
   await loadMyProducts();
+};
+
+/* 5. KUHAKIKI ADMIN */
+
+async function checkGroxAdmin(){
+  if(!currentUser) return false;
+
+  const {data,error}=await db.rpc("is_grox_admin");
+
+  if(error){
+    console.error(error);
+    return false;
+  }
+
+  return data===true;
 }
 
-// =====================================
-// LOAD MY PRODUCTS
-// =====================================
+/* 6. UKURASA WA ADMIN */
 
-async function loadMyProducts(){
-  if(!currentUser) return;
+window.loadAdmin=async function(){
+  const box=document.getElementById("adminContent");
 
-  const container = document.getElementById("myProducts");
+  if(!currentUser){
+    box.innerHTML="<p>Ingia kwanza kwa akaunti ya Admin.</p>";
+    return;
+  }
 
-  const {data,error} = await db
-    .from("bidhaa")
+  box.innerHTML="<p>Inapakia taarifa za Admin...</p>";
+
+  const admin=await checkGroxAdmin();
+
+  if(!admin){
+    box.innerHTML="<p>Huna ruhusa ya kufungua ukurasa wa Admin.</p>";
+    return;
+  }
+
+  const {data:requests,error}=await db
+    .from("grox_payment_requests")
     .select("*")
-    .eq("seller_id",currentUser.id)
-    .order("created_at",{ascending:false});
+    .eq("status","pending")
+    .order("submitted_at",{ascending:false});
 
   if(error){
-    container.innerHTML =
-      '<div class="empty">Imeshindikana kupakia bidhaa zako.</div>';
+    box.textContent="Imeshindikana kupata malipo: "+error.message;
     return;
   }
 
-  if(!data || data.length === 0){
-    container.innerHTML =
-      '<div class="empty">Bado hujaweka bidhaa yoyote.</div>';
-    return;
-  }
+  const {data:sellers}=await db
+    .from("grox_subscriptions")
+    .select("*")
+    .order("updated_at",{ascending:false});
 
-  container.innerHTML = data.map(product=>{
-    return `
-      <div class="product">
-        ${
-          product.picha_url
-          ? `<img src="${safeText(product.picha_url)}" alt="Bidhaa">`
-          : ""
-        }
-        <div class="product-info">
-          <div class="product-name">${safeText(product.jina)}</div>
-          <div class="product-price">
-            TSh ${Number(product.bei || 0).toLocaleString("en-US")}
+  box.innerHTML=`
+    <h2>Maombi ya Malipo</h2>
+    <div id="groxRequests">
+      ${
+        (requests||[]).length
+        ? requests.map(r=>`
+          <div class="section">
+            <p><b>Muuzaji:</b> ${escapeHTML(r.seller_id)}</p>
+            <p><b>Aina:</b> ${escapeHTML(r.payment_type)}</p>
+            <p><b>Kiasi:</b> TSh ${Number(r.amount).toLocaleString()}</p>
+            <p><b>Kumbukumbu:</b> ${escapeHTML(r.transaction_ref)}</p>
+            <p><b>Tarehe:</b> ${escapeHTML(r.submitted_at)}</p>
+            <button onclick="approveGroxPayment('${r.id}')">Thibitisha</button>
+            <button class="secondary" onclick="rejectGroxPayment('${r.id}')">Kataa</button>
           </div>
-          <button class="main-btn danger-btn"
-            onclick="deleteProduct('${product.id}')">
-            Futa bidhaa
-          </button>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
+        `).join("")
+        : "<p>Hakuna maombi yanayosubiri.</p>"
+      }
+    </div>
 
-// =====================================
-// DELETE MY PRODUCT
-// =====================================
+    <hr style="margin:18px 0">
+    <h2>Usimamizi wa Wauzaji</h2>
+    <div>
+      ${
+        (sellers||[]).length
+        ? sellers.map(s=>`
+          <div class="section">
+            <p><b>Muuzaji:</b> ${escapeHTML(s.user_id)}</p>
+            <p><b>Malipo ya kwanza:</b> ${s.initial_paid?"Ndiyo":"Hapana"}</p>
+            <p><b>Usimamishaji:</b> ${s.is_suspended?"Amesimamishwa":"Hajasimamishwa"}</p>
+            <p><b>Mwisho wa usajili:</b> ${s.subscription_expires_at?escapeHTML(s.subscription_expires_at):"Hakuna"}</p>
+            ${
+              s.is_suspended
+              ? `<button onclick="reactivateGroxSeller('${s.user_id}')">Fungua akaunti</button>`
+              : `<button class="secondary" onclick="suspendGroxSeller('${s.user_id}')">Simamisha akaunti</button>`
+            }
+          </div>
+        `).join("")
+        : "<p>Bado hakuna wauzaji wenye taarifa za usajili.</p>"
+      }
+    </div>
+  `;
+};
 
-async function deleteProduct(id){
-  if(!currentUser) return;
+/* 7. KUTHIBITISHA MALIPO */
 
-  const confirmed = confirm("Una uhakika unataka kufuta bidhaa hii?");
+window.approveGroxPayment=async function(id){
+  if(!confirm("Je, umethibitisha kupokea malipo halisi?")) return;
 
-  if(!confirmed) return;
-
-  const {error} = await db
-    .from("bidhaa")
-    .delete()
-    .eq("id",id)
-    .eq("seller_id",currentUser.id);
+  const {error}=await db.rpc("approve_grox_payment",{
+    p_payment_id:id
+  });
 
   if(error){
-    showMessage("Imeshindikana kufuta bidhaa: " + error.message);
+    alert("Imeshindikana: "+error.message);
     return;
   }
 
-  showMessage("Bidhaa imefutwa.");
-  await loadProducts();
-  await loadMyProducts();
-}
+  alert("Malipo yameidhinishwa.");
+  await loadAdmin();
+};
 
-// =====================================
-// GET SELLER SESSION
-// =====================================
+/* 8. KUKATAA MALIPO */
 
-async function checkSession(){
-  const {data,error} = await db.auth.getSession();
+window.rejectGroxPayment=async function(id){
+  const note=prompt("Andika sababu ya kukataa malipo:");
+
+  if(note===null) return;
+
+  const {error}=await db.rpc("reject_grox_payment",{
+    p_payment_id:id,
+    p_note:note
+  });
 
   if(error){
-    console.log(error);
+    alert("Imeshindikana: "+error.message);
     return;
   }
 
-  currentUser = data.session?.user || null;
-  updateSellerArea();
-}
+  alert("Ombi limekataliwa.");
+  await loadAdmin();
+};
 
-// =====================================
-// AUTH STATE
-// =====================================
+/* 9. KUSIMAMISHA MUUZAJI */
 
-db.auth.onAuthStateChange((event,session)=>{
-  currentUser = session?.user || null;
-  updateSellerArea();
+window.suspendGroxSeller=async function(id){
+  if(!confirm("Unataka kusimamisha akaunti hii?")) return;
+
+  const {error}=await db.rpc("suspend_grox_seller",{
+    p_seller_id:id
+  });
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  alert("Akaunti imesimamishwa.");
+  await loadAdmin();
+};
+
+/* 10. KUFUNGUA MUUZAJI */
+
+window.reactivateGroxSeller=async function(id){
+  if(!confirm("Unataka kufungua akaunti hii tena?")) return;
+
+  const {error}=await db.rpc("reactivate_grox_seller",{
+    p_seller_id:id
+  });
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  alert("Akaunti imefunguliwa.");
+  await loadAdmin();
+};
+
+/* 11. KUBORESHA UKURASA WA AKAUNTI */
+
+const oldShowPage=window.showPage;
+
+window.showPage=function(page){
+  if(typeof oldShowPage==="function"){
+    oldShowPage(page);
+  }
+
+  if(page==="account"){
+    showGroxAccount();
+  }
+
+  if(page==="admin"){
+    loadAdmin();
+  }
+};
+
+/* 12. KUKAGUA AKAUNTI INAPOINGIA */
+
+db.auth.onAuthStateChange((_event,session)=>{
+  currentUser=session?.user||null;
+
+  if(currentUser){
+    setTimeout(()=>{
+      showGroxAccount();
+    },300);
+  }
 });
 
-// =====================================
-// START APP
-// =====================================
-
-async function startApp(){
-  await checkSession();
-  await loadProducts();
-}
-
-startApp();
-
-</script>
-</body>
-</html>
+/* MWISHO WA SEHEMU YA PILI */
+  </script>
+  
+  
