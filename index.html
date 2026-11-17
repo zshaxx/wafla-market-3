@@ -1,13 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="sw">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GROX MARKET</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,sans-serif;background:#f3f5f8;color:#172033}
@@ -36,407 +33,164 @@ footer{text-align:center;padding:25px;color:#667085}
 #splash h1{font-size:42px;color:#36d399}
 </style>
 </head>
-
 <body>
-
-<div id="splash">
-  <h1>GROX MARKET</h1>
-</div>
-
-<header>
-  <div class="top">
-    <div class="logo">GROX MARKET</div>
-    <button class="secondary" onclick="showPage('account')">Akaunti</button>
-  </div>
-</header>
-
+<div id="splash"><h1>GROX MARKET</h1></div>
+<header><div class="top"><div class="logo">GROX MARKET</div><button class="secondary" onclick="showPage('account')">Akaunti</button></div></header>
 <nav>
-  <button onclick="showPage('home')">All Market</button>
-  <button onclick="showPage('add')">Weka bidhaa</button>
-  <button onclick="showPage('myproducts')">Bidhaa zangu</button>
-  <button onclick="showPage('account')">Akaunti</button>
-  <button onclick="showPage('admin')">Admin</button>
+<button onclick="showPage('home')">All Market</button>
+<button onclick="showPage('add')">Weka bidhaa</button>
+<button onclick="showPage('myproducts')">Bidhaa zangu</button>
+<button onclick="showPage('account')">Akaunti</button>
+<button onclick="showPage('admin')">Admin</button>
 </nav>
-
 <main>
-
 <section id="home" class="page">
-  <div class="section">
-    <h2>Karibu GROX MARKET</h2>
-    <input id="search" placeholder="Tafuta bidhaa au jina la muuzaji..." oninput="renderProducts()">
-    <select id="category" onchange="renderProducts()">
-      <option value="">Makundi yote</option>
-      <option>Elektroniki</option>
-      <option>Mavazi</option>
-      <option>Samani</option>
-      <option>Vyakula</option>
-      <option>Vingine</option>
-    </select>
-  </div>
-  <div id="products" class="grid"></div>
+<div class="section">
+<h2>Karibu GROX MARKET</h2>
+<input id="search" placeholder="Tafuta bidhaa au jina la muuzaji..." oninput="renderProducts()">
+<select id="category" onchange="renderProducts()">
+<option value="">Makundi yote</option><option>Elektroniki</option><option>Mavazi</option><option>Samani</option><option>Vyakula</option><option>Vingine</option>
+</select>
+</div>
+<div id="products" class="grid"></div>
 </section>
-
 <section id="add" class="page hidden">
-  <div class="section">
-    <h2>Weka bidhaa mpya</h2>
-    <p class="small">Ingia kwanza kwenye akaunti yako ya muuzaji.</p>
-    <input id="pname" placeholder="Jina la bidhaa">
-    <input id="pprice" type="number" placeholder="Bei ya bidhaa">
-    <input id="parea" placeholder="Eneo bidhaa ilipo">
-    <select id="pcategory">
-      <option>Elektroniki</option>
-      <option>Mavazi</option>
-      <option>Samani</option>
-      <option>Vyakula</option>
-      <option>Vingine</option>
-    </select>
-    <textarea id="pdescription" placeholder="Maelezo ya bidhaa"></textarea>
-    <input id="pimage" type="file" accept="image/*">
-    <button onclick="addProduct()">Hifadhi bidhaa</button>
-    <p id="addMessage"></p>
-  </div>
+<div class="section">
+<h2>Weka bidhaa mpya</h2>
+<p class="small">Ingia kwanza, na uwe umelipia ili uweze kuweka bidhaa.</p>
+<input id="pname" placeholder="Jina la bidhaa">
+<input id="pprice" type="number" placeholder="Bei ya bidhaa">
+<input id="parea" placeholder="Eneo bidhaa ilipo">
+<select id="pcategory"><option>Elektroniki</option><option>Mavazi</option><option>Samani</option><option>Vyakula</option><option>Vingine</option></select>
+<textarea id="pdescription" placeholder="Maelezo ya bidhaa"></textarea>
+<input id="pimage" type="file" accept="image/*">
+<button onclick="addProduct()">Hifadhi bidhaa</button>
+<p id="addMessage"></p>
+</div>
 </section>
-
 <section id="myproducts" class="page hidden">
-  <div class="section">
-    <h2>Bidhaa zangu</h2>
-    <div id="myProductList"></div>
-  </div>
+<div class="section"><h2>Bidhaa zangu</h2><div id="myProductList"></div></div>
 </section>
-
 <section id="account" class="page hidden">
-  <div class="section">
-    <h2>Akaunti ya muuzaji</h2>
-    <input id="sellerName" placeholder="Jina lako">
-    <input id="sellerEmail" type="email" placeholder="Barua pepe">
-    <input id="sellerPassword" type="password" placeholder="Nenosiri">
-    <input id="sellerPhone" placeholder="Namba ya simu">
-    <button onclick="registerSeller()">Fungua akaunti</button>
-    <hr>
-    <h2>Ingia kwenye akaunti</h2>
-    <input id="loginEmail" type="email" placeholder="Barua pepe">
-    <input id="loginPassword" type="password" placeholder="Nenosiri">
-    <button onclick="loginSeller()">Ingia</button>
-    <button class="secondary" onclick="logoutSeller()">Toka</button>
-    <p id="accountMessage"></p>
-  </div>
+<div class="section">
+<h2>Akaunti ya muuzaji</h2>
+<input id="sellerName" placeholder="Jina lako">
+<input id="sellerEmail" type="email" placeholder="Barua pepe">
+<input id="sellerPassword" type="password" placeholder="Nenosiri">
+<input id="sellerPhone" placeholder="Namba ya simu">
+<button onclick="registerSeller()">Fungua akaunti</button>
+<hr>
+<h2>Ingia kwenye akaunti</h2>
+<input id="loginEmail" type="email" placeholder="Barua pepe">
+<input id="loginPassword" type="password" placeholder="Nenosiri">
+<button onclick="loginSeller()">Ingia</button>
+<button class="secondary" onclick="logoutSeller()">Toka</button>
+<p id="accountMessage"></p>
+</div>
 </section>
-
 <section id="admin" class="page hidden">
-  <div class="section">
-    <h2>GROX Admin</h2>
-    <p class="small">Sehemu ya kusimamia malipo na akaunti za wauzaji itaunganishwa katika sehemu ya pili.</p>
-    <div id="adminContent"></div>
-  </div>
+<div class="section"><h2>GROX Admin</h2><div id="adminContent"></div></div>
 </section>
-
 </main>
-
 <footer>GROX MARKET © 2026</footer>
 
 <script>
 const SUPABASE_URL = "https://exwdildhebdrweqpdjkb.supabase.co";
 const SUPABASE_KEY = "sb_publishable_rsV-RqT04ZH-HzbJNpqMfw_5uKsyKUB";
-
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
-
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let currentUser = null;
 let allProducts = [];
+let groxSubscription = null;
 
 function showPage(page){
   document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
   document.getElementById(page).classList.remove("hidden");
-
   if(page==="myproducts") loadMyProducts();
+  if(page==="account") showGroxAccount();
   if(page==="admin") loadAdmin();
 }
+function escapeHTML(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 
 async function registerSeller(){
   const name=document.getElementById("sellerName").value.trim();
   const email=document.getElementById("sellerEmail").value.trim();
   const password=document.getElementById("sellerPassword").value;
   const phone=document.getElementById("sellerPhone").value.trim();
-
-  if(!name||!email||!password||!phone){
-    return alert("Jaza taarifa zote.");
-  }
-
-  const {data,error}=await db.auth.signUp({
-    email,password,
-    options:{data:{jina:name,phone:phone}}
-  });
-
-  if(error)return alert(error.message);
-
+  if(!name||!email||!password||!phone) return alert("Jaza taarifa zote.");
+  const {data,error}=await db.auth.signUp({email,password,options:{data:{jina:name,phone:phone}}});
+  if(error) return alert(error.message);
   alert("Usajili umetumwa. Thibitisha barua pepe ikiwa utaombwa.");
 }
-
 async function loginSeller(){
   const email=document.getElementById("loginEmail").value.trim();
   const password=document.getElementById("loginPassword").value;
-
-  const {data,error}=await db.auth.signInWithPassword({
-    email,password
-  });
-
-  if(error)return alert(error.message);
-
+  const {data,error}=await db.auth.signInWithPassword({email,password});
+  if(error) return alert(error.message);
   currentUser=data.user;
   document.getElementById("accountMessage").textContent="Umeingia kikamilifu.";
   await loadProducts();
+  await showGroxAccount();
 }
-
-async function logoutSeller(){
-  await db.auth.signOut();
-  currentUser=null;
-  alert("Umetoka kwenye akaunti.");
-}
-
+async function logoutSeller(){ await db.auth.signOut(); currentUser=null; alert("Umetoka."); showPage('home'); }
 async function loadProducts(){
   const {data,error}=await db.from("bidhaa").select("*").order("created_at",{ascending:false});
-
-  if(error){
-    console.error(error);
-    return;
-  }
-
-  allProducts=data||[];
-  renderProducts();
+  if(error){console.error(error);return;}
+  allProducts=data||[]; renderProducts();
 }
-
 function renderProducts(){
   const search=(document.getElementById("search")?.value||"").toLowerCase();
   const category=document.getElementById("category")?.value||"";
-
   const filtered=allProducts.filter(p=>{
-    const name=(p.jina||p.name||"").toLowerCase();
-    const seller=(p.seller_name||p.vendor||"").toLowerCase();
-    const cat=(p.category||"");
-    return (name.includes(search)||seller.includes(search)) &&
-      (!category||cat===category);
+    const name=(p.jina||"").toLowerCase(); const seller=(p.seller_name||"").toLowerCase(); const cat=(p.category||"");
+    return (name.includes(search)||seller.includes(search)) && (!category||cat===category);
   });
-
-  document.getElementById("products").innerHTML=filtered.map(p=>{
-    const name=p.jina||p.name||"Bidhaa";
-    const price=p.bei??p.price??0;
-    const image=p.picha_url||p.image||"";
-    const location=p.eneo||p.location||p.area||"";
-    return `
-      <div class="product">
-        <img src="${escapeHTML(image)}" alt="Bidhaa">
-        <div class="product-info">
-          <h3>${escapeHTML(name)}</h3>
-          <div class="price">TSh ${Number(price).toLocaleString("sw-TZ")}</div>
-          <div class="product-location">${escapeHTML(location)}</div>
-          <p class="small">${escapeHTML(p.seller_name||p.vendor||"")}</p>
-        </div>
-      </div>`;
-  }).join("");
+  document.getElementById("products").innerHTML=filtered.map(p=>`
+    <div class="product"><img src="${escapeHTML(p.picha_url||"")}" alt="Bidhaa"><div class="product-info"><h3>${escapeHTML(p.jina||"Bidhaa")}</h3><div class="price">TSh ${Number(p.bei||0).toLocaleString("sw-TZ")}</div><div class="product-location">${escapeHTML(p.eneo||"")}</div><p class="small">${escapeHTML(p.seller_name||"")}</p><p class="small">${escapeHTML(p.seller_phone||"")}</p></div></div>`).join("");
 }
-
-function escapeHTML(value){
-  return String(value??"").replace(/[&<>"']/g,c=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",
-    '"':"&quot;","'":"&#39;"
-  })[c]);
-}
-
 async function loadMyProducts(){
-  if(!currentUser){
-    document.getElementById("myProductList").textContent="Ingia kwanza.";
-    return;
-  }
-
-  const {data,error}=await db.from("bidhaa")
-    .select("*").eq("seller_id",currentUser.id);
-
-  if(error){
-    document.getElementById("myProductList").textContent=error.message;
-    return;
-  }
-
-  document.getElementById("myProductList").innerHTML=(data||[]).map(p=>
-    `<p>${escapeHTML(p.jina||p.name)} — TSh ${Number(p.bei||p.price||0).toLocaleString()}</p>`
-  ).join("")||"Bado huna bidhaa.";
+  if(!currentUser){document.getElementById("myProductList").textContent="Ingia kwanza.";return;}
+  const {data,error}=await db.from("bidhaa").select("*").eq("seller_id",currentUser.id);
+  if(error){document.getElementById("myProductList").textContent=error.message;return;}
+  document.getElementById("myProductList").innerHTML=(data||[]).map(p=>`<p>${escapeHTML(p.jina)} — TSh ${Number(p.bei||0).toLocaleString()}</p>`).join("")||"Bado huna bidhaa.";
 }
 
-async function addProduct(){
-  if(!currentUser){
-    return alert("Ingia kwanza kwenye akaunti yako.");
-  }
-
-  document.getElementById("addMessage").textContent=
-    "Tutaunganisha uthibitisho wa usajili na upakiaji wa picha katika sehemu ya pili.";
-}
-
-async function loadAdmin(){
-  document.getElementById("adminContent").textContent=
-    "Ukurasa wa Admin utaunganishwa katika sehemu ya pili.";
-}
-
-async function startApp(){
-  const {data}=await db.auth.getSession();
-  currentUser=data.session?.user||null;
-  await loadProducts();
-  setTimeout(()=>{
-    document.getElementById("splash").classList.add("hidden");
-  },3000);
-}
-
-db.auth.onAuthStateChange((_event,session)=>{
-  currentUser=session?.user||null;
-});
-
-startApp();
-</script>
-
-<!-- SEHEMU YA PILI ITAUNGANISHWA HAPA CHINI -->
-</body>
-    </html>
-
-
-<script>
-/* =====================================
-   GROX MARKET - SEHEMU YA PILI
-   MALIPO, ADMIN NA BIDHAA
-===================================== */
-
-let groxSubscription = null;
-
-/* 1. KUPATA TAARIFA ZA AKAUNTI */
-
+// ===== SEHEMU YA PILI - MALIPO =====
 async function getGroxSubscription(){
   if(!currentUser) return null;
-
-  const {data,error}=await db
-    .from("grox_subscriptions")
-    .select("*")
-    .eq("user_id",currentUser.id)
-    .maybeSingle();
-
-  if(error){
-    console.error(error);
-    return null;
-  }
-
-  groxSubscription=data;
-  return data;
+  const {data,error}=await db.from("grox_subscriptions").select("*").eq("user_id",currentUser.id).maybeSingle();
+  if(error){console.error(error);return null;}
+  groxSubscription=data; return data;
 }
-
-/* 2. KUONYESHA HALI YA AKAUNTI */
-
 async function showGroxAccount(){
-  const section=document.getElementById("account");
-  if(!section) return;
-
+  const section=document.getElementById("account"); if(!section) return;
   let panel=document.getElementById("groxPaymentPanel");
-
-  if(!panel){
-    panel=document.createElement("div");
-    panel.id="groxPaymentPanel";
-    panel.className="section";
-    section.appendChild(panel);
-  }
-
-  if(!currentUser){
-    panel.innerHTML="<h2>Malipo ya GROX</h2><p>Ingia kwanza ili kuona hali ya akaunti yako.</p>";
-    return;
-  }
-
+  if(!panel){panel=document.createElement("div"); panel.id="groxPaymentPanel"; panel.className="section"; section.appendChild(panel);}
+  if(!currentUser){panel.innerHTML="<h2>Malipo ya GROX</h2><p>Ingia kwanza ili kuona hali ya akaunti yako.</p>";return;}
   const sub=await getGroxSubscription();
-
-  const {data:setting}=await db
-    .from("grox_settings")
-    .select("setting_value")
-    .eq("setting_key","payment_phone")
-    .maybeSingle();
-
-  const paymentPhone=setting?.setting_value||"Namba haijawekwa";
-
-  let status="Hujalipia akaunti bado.";
-  let paymentType="initial";
-
-  if(sub?.is_suspended){
-    status="Akaunti yako imesimamishwa na Admin.";
-  }else if(sub?.initial_paid && sub?.subscription_expires_at){
+  const {data:setting}=await db.from("grox_settings").select("setting_value").eq("setting_key","payment_phone").maybeSingle();
+  const paymentPhone=setting?.setting_value||"0702379441";
+  let status="Hujalipia akaunti bado."; let paymentType="initial";
+  if(sub?.is_suspended){status="Akaunti yako imesimamishwa na Admin.";}
+  else if(sub?.initial_paid && sub?.subscription_expires_at){
     const expiry=new Date(sub.subscription_expires_at);
-    if(expiry>new Date()){
-      status="Akaunti yako iko hai mpaka "+expiry.toLocaleString("sw-TZ");
-      paymentType="monthly";
-    }else{
-      status="Muda wa usajili umeisha. Lipa TSh 10,000 kuendelea.";
-      paymentType="monthly";
-    }
+    if(expiry>new Date()){status="Akaunti yako iko hai mpaka "+expiry.toLocaleString("sw-TZ"); paymentType="monthly";}
+    else{status="Muda wa usajili umeisha. Lipa TSh 10,000 kuendelea."; paymentType="monthly";}
   }
-
-  const {data:pending}=await db
-    .from("grox_payment_requests")
-    .select("id,status,payment_type,amount,submitted_at")
-    .eq("seller_id",currentUser.id)
-    .eq("status","pending")
-    .order("submitted_at",{ascending:false})
-    .limit(1);
-
-  panel.innerHTML=`
-    <h2>Usajili na Malipo ya GROX</h2>
-    <p><b>Hali ya akaunti:</b> ${escapeHTML(status)}</p>
-    <p><b>Namba ya Tigo Pesa:</b> ${escapeHTML(paymentPhone)}</p>
-    ${
-      pending?.length
-      ? `<p style="color:#b7791f;margin-top:10px">Ombi lako la malipo linasubiri uthibitisho wa Admin.</p>`
-      : `
-        <hr style="margin:14px 0">
-        <h3>${paymentType==="initial"?"Malipo ya kwanza":"Malipo ya mwezi"}</h3>
-        <p class="price">TSh ${paymentType==="initial"?"5,000":"10,000"}</p>
-        <p class="small">Tuma malipo kwa namba iliyoonyeshwa hapo juu. Kisha weka kumbukumbu ya muamala hapa chini.</p>
-        <input id="groxReference" placeholder="Namba ya kumbukumbu ya muamala">
-        <button onclick="submitGroxPayment('${paymentType}')">Tuma uthibitisho wa malipo</button>
-      `
-    }
-    <p id="groxPaymentMessage" style="margin-top:10px"></p>
-  `;
+  const {data:pending}=await db.from("grox_payment_requests").select("id,status,payment_type,amount,submitted_at").eq("seller_id",currentUser.id).eq("status","pending").order("submitted_at",{ascending:false}).limit(1);
+  panel.innerHTML=`<h2>Usajili na Malipo ya GROX</h2><p><b>Hali ya akaunti:</b> ${escapeHTML(status)}</p><p><b>Namba ya Tigo Pesa:</b> ${escapeHTML(paymentPhone)}</p>${pending?.length?`<p style="color:#b7791f;margin-top:10px">Ombi lako la malipo linasubiri uthibitisho wa Admin.</p>`:`<hr style="margin:14px 0"><h3>${paymentType==="initial"?"Malipo ya kwanza":"Malipo ya mwezi"}</h3><p class="price">TSh ${paymentType==="initial"?"5,000":"10,000"}</p><p class="small">Tuma malipo kwa namba iliyoonyeshwa hapo juu. Kisha weka kumbukumbu ya muamala hapa chini.</p><input id="groxReference" placeholder="Namba ya kumbukumbu ya muamala"><button onclick="submitGroxPayment('${paymentType}')">Tuma uthibitisho wa malipo</button>`}<p id="groxPaymentMessage" style="margin-top:10px"></p>`;
 }
-
-/* 3. KUTUMA OMBI LA MALIPO */
-
 window.submitGroxPayment=async function(type){
   if(!currentUser) return alert("Ingia kwanza.");
-
   const reference=document.getElementById("groxReference")?.value.trim();
-
   if(!reference) return alert("Weka kumbukumbu ya muamala.");
-
-  if(!["initial","monthly"].includes(type)){
-    return alert("Aina ya malipo si sahihi.");
-  }
-
-  const message=document.getElementById("groxPaymentMessage");
-  message.textContent="Inatuma ombi...";
-
-  const {error}=await db.rpc("submit_grox_payment",{
-    p_payment_type:type,
-    p_transaction_ref:reference
-  });
-
-  if(error){
-    message.textContent="Imeshindikana: "+error.message;
-    return;
-  }
-
+  const message=document.getElementById("groxPaymentMessage"); message.textContent="Inatuma ombi...";
+  const {error}=await db.rpc("submit_grox_payment",{p_payment_type:type,p_transaction_ref:reference});
+  if(error){message.textContent="Imeshindikana: "+error.message;return;}
   message.textContent="Ombi limetumwa. Subiri Admin athibitishe malipo yako.";
   await showGroxAccount();
 };
-
-/* 4. KUONGEZA BIDHAA NA PICHA */
-
 window.addProduct=async function(){
-  if(!currentUser){
-    return alert("Ingia kwanza kwenye akaunti yako.");
-  }
-
+  if(!currentUser) return alert("Ingia kwanza.");
   const message=document.getElementById("addMessage");
   const name=document.getElementById("pname").value.trim();
   const price=Number(document.getElementById("pprice").value);
@@ -444,294 +198,54 @@ window.addProduct=async function(){
   const category=document.getElementById("pcategory").value;
   const description=document.getElementById("pdescription").value.trim();
   const file=document.getElementById("pimage").files[0];
-
-  if(!name||!price||price<=0||!area||!file){
-    message.textContent="Jaza jina, bei, eneo na chagua picha.";
-    return;
-  }
-
-  if(file.size>5*1024*1024){
-    message.textContent="Picha iwe chini ya MB 5.";
-    return;
-  }
-
-  const {data:sub,error:subError}=await db
-    .from("grox_subscriptions")
-    .select("*")
-    .eq("user_id",currentUser.id)
-    .maybeSingle();
-
-  if(subError){
-    message.textContent="Imeshindikana kukagua akaunti: "+subError.message;
-    return;
-  }
-
-  if(
-    !sub ||
-    !sub.initial_paid ||
-    sub.is_suspended ||
-    !sub.subscription_expires_at ||
-    new Date(sub.subscription_expires_at)<=new Date()
-  ){
-    message.textContent="Akaunti yako haijaidhinishwa au muda umeisha. Kamilisha malipo kwanza.";
-    return;
-  }
-
+  if(!name||!price||price<=0||!area||!file){message.textContent="Jaza jina, bei, eneo na chagua picha.";return;}
+  if(file.size>5*1024*1024){message.textContent="Picha iwe chini ya MB 5.";return;}
+  const {data:sub,error:subError}=await db.from("grox_subscriptions").select("*").eq("user_id",currentUser.id).maybeSingle();
+  if(subError){message.textContent="Imeshindikana kukagua akaunti: "+subError.message;return;}
+  if(!sub||!sub.initial_paid||sub.is_suspended||!sub.subscription_expires_at||new Date(sub.subscription_expires_at)<=new Date()){message.textContent="Akaunti yako haijaidhinishwa au muda umeisha. Kamilisha malipo kwanza.";return;}
   message.textContent="Inapakia picha...";
-
   const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
   const path=currentUser.id+"/"+Date.now()+"-"+safeName;
-
-  const {data:uploaded,error:uploadError}=await db
-    .storage
-    .from("product-images")
-    .upload(path,file,{
-      upsert:false,
-      contentType:file.type
-    });
-
-  if(uploadError){
-    message.textContent="Picha haikupakiwa: "+uploadError.message;
-    return;
-  }
-
-  const {data:urlData}=db
-    .storage
-    .from("product-images")
-    .getPublicUrl(uploaded.path);
-
+  const {data:uploaded,error:uploadError}=await db.storage.from("product-images").upload(path,file,{upsert:false,contentType:file.type});
+  if(uploadError){message.textContent="Picha haikupakiwa: "+uploadError.message;return;}
+  const {data:urlData}=db.storage.from("product-images").getPublicUrl(uploaded.path);
   const profile=currentUser.user_metadata||{};
-
-  const {error:insertError}=await db
-    .from("bidhaa")
-    .insert({
-      jina:name,
-      bei:price,
-      eneo:area,
-      category:category,
-      maelezo:description,
-      picha_url:urlData.publicUrl,
-      seller_id:currentUser.id,
-      seller_name:profile.jina||"Muuzaji",
-      seller_phone:profile.phone||""
-    });
-
-  if(insertError){
-    message.textContent="Bidhaa haijahifadhiwa: "+insertError.message;
-    return;
-  }
-
+  const {error:insertError}=await db.from("bidhaa").insert({jina:name,bei:price,eneo:area,category:category,maelezo:description,picha_url:urlData.publicUrl,seller_id:currentUser.id,seller_name:profile.jina||"Muuzaji",seller_phone:profile.phone||""});
+  if(insertError){message.textContent="Bidhaa haijahifadhiwa: "+insertError.message;return;}
   message.textContent="Bidhaa imehifadhiwa kikamilifu!";
-  document.getElementById("pname").value="";
-  document.getElementById("pprice").value="";
-  document.getElementById("parea").value="";
-  document.getElementById("pdescription").value="";
-  document.getElementById("pimage").value="";
-
-  await loadProducts();
-  await loadMyProducts();
+  document.getElementById("pname").value="";document.getElementById("pprice").value="";document.getElementById("parea").value="";document.getElementById("pdescription").value="";document.getElementById("pimage").value="";
+  await loadProducts(); await loadMyProducts();
 };
-
-/* 5. KUHAKIKI ADMIN */
-
 async function checkGroxAdmin(){
   if(!currentUser) return false;
-
   const {data,error}=await db.rpc("is_grox_admin");
-
-  if(error){
-    console.error(error);
-    return false;
-  }
-
+  if(error){console.error(error);return false;}
   return data===true;
 }
-
-/* 6. UKURASA WA ADMIN */
-
 window.loadAdmin=async function(){
   const box=document.getElementById("adminContent");
-
-  if(!currentUser){
-    box.innerHTML="<p>Ingia kwanza kwa akaunti ya Admin.</p>";
-    return;
-  }
-
+  if(!currentUser){box.innerHTML="<p>Ingia kwanza kwa akaunti ya Admin.</p>";return;}
   box.innerHTML="<p>Inapakia taarifa za Admin...</p>";
-
   const admin=await checkGroxAdmin();
-
-  if(!admin){
-    box.innerHTML="<p>Huna ruhusa ya kufungua ukurasa wa Admin.</p>";
-    return;
-  }
-
-  const {data:requests,error}=await db
-    .from("grox_payment_requests")
-    .select("*")
-    .eq("status","pending")
-    .order("submitted_at",{ascending:false});
-
-  if(error){
-    box.textContent="Imeshindikana kupata malipo: "+error.message;
-    return;
-  }
-
-  const {data:sellers}=await db
-    .from("grox_subscriptions")
-    .select("*")
-    .order("updated_at",{ascending:false});
-
-  box.innerHTML=`
-    <h2>Maombi ya Malipo</h2>
-    <div id="groxRequests">
-      ${
-        (requests||[]).length
-        ? requests.map(r=>`
-          <div class="section">
-            <p><b>Muuzaji:</b> ${escapeHTML(r.seller_id)}</p>
-            <p><b>Aina:</b> ${escapeHTML(r.payment_type)}</p>
-            <p><b>Kiasi:</b> TSh ${Number(r.amount).toLocaleString()}</p>
-            <p><b>Kumbukumbu:</b> ${escapeHTML(r.transaction_ref)}</p>
-            <p><b>Tarehe:</b> ${escapeHTML(r.submitted_at)}</p>
-            <button onclick="approveGroxPayment('${r.id}')">Thibitisha</button>
-            <button class="secondary" onclick="rejectGroxPayment('${r.id}')">Kataa</button>
-          </div>
-        `).join("")
-        : "<p>Hakuna maombi yanayosubiri.</p>"
-      }
-    </div>
-
-    <hr style="margin:18px 0">
-    <h2>Usimamizi wa Wauzaji</h2>
-    <div>
-      ${
-        (sellers||[]).length
-        ? sellers.map(s=>`
-          <div class="section">
-            <p><b>Muuzaji:</b> ${escapeHTML(s.user_id)}</p>
-            <p><b>Malipo ya kwanza:</b> ${s.initial_paid?"Ndiyo":"Hapana"}</p>
-            <p><b>Usimamishaji:</b> ${s.is_suspended?"Amesimamishwa":"Hajasimamishwa"}</p>
-            <p><b>Mwisho wa usajili:</b> ${s.subscription_expires_at?escapeHTML(s.subscription_expires_at):"Hakuna"}</p>
-            ${
-              s.is_suspended
-              ? `<button onclick="reactivateGroxSeller('${s.user_id}')">Fungua akaunti</button>`
-              : `<button class="secondary" onclick="suspendGroxSeller('${s.user_id}')">Simamisha akaunti</button>`
-            }
-          </div>
-        `).join("")
-        : "<p>Bado hakuna wauzaji wenye taarifa za usajili.</p>"
-      }
-    </div>
-  `;
+  if(!admin){box.innerHTML="<p>Huna ruhusa ya kufungua ukurasa wa Admin.</p>";return;}
+  const {data:requests,error}=await db.from("grox_payment_requests").select("*").eq("status","pending").order("submitted_at",{ascending:false});
+  if(error){box.textContent="Imeshindikana kupata malipo: "+error.message;return;}
+  const {data:sellers}=await db.from("grox_subscriptions").select("*").order("updated_at",{ascending:false});
+  box.innerHTML=`<h2>Maombi ya Malipo</h2><div>${(requests||[]).length?requests.map(r=>`<div class="section"><p><b>Muuzaji:</b> ${escapeHTML(r.seller_id)}</p><p><b>Aina:</b> ${escapeHTML(r.payment_type)}</p><p><b>Kiasi:</b> TSh ${Number(r.amount).toLocaleString()}</p><p><b>Kumbukumbu:</b> ${escapeHTML(r.transaction_ref)}</p><p><b>Tarehe:</b> ${escapeHTML(r.submitted_at)}</p><button onclick="approveGroxPayment('${r.id}')">Thibitisha</button> <button class="secondary" onclick="rejectGroxPayment('${r.id}')">Kataa</button></div>`).join(""):"<p>Hakuna maombi yanayosubiri.</p>"}</div><hr style="margin:18px 0"><h2>Usimamizi wa Wauzaji</h2><div>${(sellers||[]).length?sellers.map(s=>`<div class="section"><p><b>Muuzaji:</b> ${escapeHTML(s.user_id)}</p><p><b>Malipo ya kwanza:</b> ${s.initial_paid?"Ndiyo":"Hapana"}</p><p><b>Usimamishaji:</b> ${s.is_suspended?"Amesimamishwa":"Hajasimamishwa"}</p><p><b>Mwisho wa usajili:</b> ${s.subscription_expires_at?escapeHTML(s.subscription_expires_at):"Hakuna"}</p>${s.is_suspended?`<button onclick="reactivateGroxSeller('${s.user_id}')">Fungua akaunti</button>`:`<button class="secondary" onclick="suspendGroxSeller('${s.user_id}')">Simamisha akaunti</button>`}</div>`).join(""):"<p>Bado hakuna wauzaji wenye taarifa za usajili.</p>"}</div>`;
 };
+window.approveGroxPayment=async function(id){ if(!confirm("Je, umethibitisha kupokea malipo halisi?")) return; const {error}=await db.rpc("approve_grox_payment",{p_payment_id:id}); if(error){alert("Imeshindikana: "+error.message);return;} alert("Malipo yameidhinishwa."); await loadAdmin(); };
+window.rejectGroxPayment=async function(id){ const note=prompt("Andika sababu ya kukataa malipo:"); if(note===null) return; const {error}=await db.rpc("reject_grox_payment",{p_payment_id:id,p_note:note}); if(error){alert("Imeshindikana: "+error.message);return;} alert("Ombi limekataliwa."); await loadAdmin(); };
+window.suspendGroxSeller=async function(id){ if(!confirm("Unataka kusimamisha akaunti hii?")) return; const {error}=await db.rpc("suspend_grox_seller",{p_seller_id:id}); if(error){alert(error.message);return;} alert("Akaunti imesimamishwa."); await loadAdmin(); };
+window.reactivateGroxSeller=async function(id){ if(!confirm("Unataka kufungua akaunti hii tena?")) return; const {error}=await db.rpc("reactivate_grox_seller",{p_seller_id:id}); if(error){alert(error.message);return;} alert("Akaunti imefunguliwa."); await loadAdmin(); };
 
-/* 7. KUTHIBITISHA MALIPO */
-
-window.approveGroxPayment=async function(id){
-  if(!confirm("Je, umethibitisha kupokea malipo halisi?")) return;
-
-  const {error}=await db.rpc("approve_grox_payment",{
-    p_payment_id:id
-  });
-
-  if(error){
-    alert("Imeshindikana: "+error.message);
-    return;
-  }
-
-  alert("Malipo yameidhinishwa.");
-  await loadAdmin();
-};
-
-/* 8. KUKATAA MALIPO */
-
-window.rejectGroxPayment=async function(id){
-  const note=prompt("Andika sababu ya kukataa malipo:");
-
-  if(note===null) return;
-
-  const {error}=await db.rpc("reject_grox_payment",{
-    p_payment_id:id,
-    p_note:note
-  });
-
-  if(error){
-    alert("Imeshindikana: "+error.message);
-    return;
-  }
-
-  alert("Ombi limekataliwa.");
-  await loadAdmin();
-};
-
-/* 9. KUSIMAMISHA MUUZAJI */
-
-window.suspendGroxSeller=async function(id){
-  if(!confirm("Unataka kusimamisha akaunti hii?")) return;
-
-  const {error}=await db.rpc("suspend_grox_seller",{
-    p_seller_id:id
-  });
-
-  if(error){
-    alert(error.message);
-    return;
-  }
-
-  alert("Akaunti imesimamishwa.");
-  await loadAdmin();
-};
-
-/* 10. KUFUNGUA MUUZAJI */
-
-window.reactivateGroxSeller=async function(id){
-  if(!confirm("Unataka kufungua akaunti hii tena?")) return;
-
-  const {error}=await db.rpc("reactivate_grox_seller",{
-    p_seller_id:id
-  });
-
-  if(error){
-    alert(error.message);
-    return;
-  }
-
-  alert("Akaunti imefunguliwa.");
-  await loadAdmin();
-};
-
-/* 11. KUBORESHA UKURASA WA AKAUNTI */
-
-const oldShowPage=window.showPage;
-
-window.showPage=function(page){
-  if(typeof oldShowPage==="function"){
-    oldShowPage(page);
-  }
-
-  if(page==="account"){
-    showGroxAccount();
-  }
-
-  if(page==="admin"){
-    loadAdmin();
-  }
-};
-
-/* 12. KUKAGUA AKAUNTI INAPOINGIA */
-
-db.auth.onAuthStateChange((_event,session)=>{
-  currentUser=session?.user||null;
-
-  if(currentUser){
-    setTimeout(()=>{
-      showGroxAccount();
-    },300);
-  }
-});
-
-/* MWISHO WA SEHEMU YA PILI */
-  </script>
-  
-  
+async function startApp(){
+  const {data}=await db.auth.getSession();
+  currentUser=data.session?.user||null;
+  await loadProducts();
+  setTimeout(()=>{document.getElementById("splash").classList.add("hidden");},1500);
+}
+db.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;});
+startApp();
+</script>
+</body>
+  </html>
